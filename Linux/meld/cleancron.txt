@@ -1,0 +1,993 @@
+
+/etc/anacrontab
+# /etc/anacrontab: configuration file for anacron
+
+# See anacron(8) and anacrontab(5) for details.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+HOME=/root
+LOGNAME=root
+
+# These replace cron's entries
+1	5	cron.daily	run-parts --report /etc/cron.daily
+7	10	cron.weekly	run-parts --report /etc/cron.weekly
+@monthly	15	cron.monthly	run-parts --report /etc/cron.monthly
+
+/etc/cron.d/.placeholder
+# DO NOT EDIT OR REMOVE
+# This file is a simple placeholder to keep dpkg from removing this directory
+
+/etc/cron.d/anacron
+# /etc/cron.d/anacron: crontab entries for the anacron package
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+30 7    * * *   root	start -q anacron || :
+
+/etc/cron.daily/mlocate
+#! /bin/bash
+
+set -e
+
+[ -x /usr/bin/updatedb.mlocate ] || exit 0
+
+if which on_ac_power >/dev/null 2>&1; then
+    ON_BATTERY=0
+    on_ac_power >/dev/null 2>&1 || ON_BATTERY=$?
+    if [ "$ON_BATTERY" -eq 1 ]; then
+	exit 0
+    fi
+fi
+
+# See ionice(1)
+if [ -x /usr/bin/ionice ] &&
+    /usr/bin/ionice -c3 true 2>/dev/null; then
+    IONICE="/usr/bin/ionice -c3"
+fi
+
+flock --nonblock /run/mlocate.daily.lock $IONICE /usr/bin/updatedb.mlocate
+
+/etc/cron.daily/.placeholder
+# DO NOT EDIT OR REMOVE
+# This file is a simple placeholder to keep dpkg from removing this directory
+
+/etc/cron.daily/bsdmainutils
+#!/bin/sh
+# /etc/cron.daily/calendar: BSD mainutils calendar daily maintenance script
+# Written by Austin Donnelly <and1000@debian.org>
+
+. /etc/default/bsdmainutils
+
+[ x$RUN_DAILY = xtrue ] || exit 0
+
+[ -x /usr/sbin/sendmail ] || exit 0
+
+if [ ! -x /usr/bin/cpp ]; then
+  echo "The cpp package is needed to run calendar."
+  exit 1
+fi
+
+/usr/bin/calendar -a
+
+/etc/cron.daily/cracklib-runtime
+#!/bin/sh
+
+set -e
+
+if [ -x /usr/sbin/update-cracklib -a -r /etc/cracklib/cracklib.conf ]
+then
+    status="$(/usr/sbin/update-cracklib)"
+    if [ -n "${status}" ]
+    then
+        /usr/bin/logger -p cron.info -t cracklib "updated dictionary (read/written words: ${status})."
+    else
+        /usr/bin/logger -p cron.info -t cracklib "no dictionary update necessary."
+    fi
+fi
+
+exit 0
+
+/etc/cron.daily/passwd
+#!/bin/sh
+
+cd /var/backups || exit 0
+
+for FILE in passwd group shadow gshadow; do
+        test -f /etc/$FILE              || continue
+        cmp -s $FILE.bak /etc/$FILE     && continue
+        cp -p /etc/$FILE $FILE.bak && chmod 600 $FILE.bak
+done
+
+/etc/cron.daily/0anacron
+#!/bin/sh
+#
+# anacron's cron script
+#
+# This script updates anacron time stamps. It is called through run-parts
+# either by anacron itself or by cron.
+#
+# The script is called "0anacron" to assure that it will be executed
+# _before_ all other scripts.
+
+test -x /usr/sbin/anacron || exit 0
+anacron -u cron.daily
+
+/etc/cron.daily/man-db
+#!/bin/sh
+#
+# man-db cron daily
+
+set -e
+
+iosched_idle=
+# Don't try to change I/O priority in a vserver or OpenVZ.
+if ! egrep -q '(envID|VxID):.*[1-9]' /proc/self/status && \
+   ([ ! -d /proc/vz ] || [ -d /proc/bc ]); then
+    iosched_idle='--iosched idle'
+fi
+
+if ! [ -d /var/cache/man ]; then
+    # Recover from deletion, per FHS.
+    mkdir -p /var/cache/man
+    chown man:root /var/cache/man || true
+    chmod 2755 /var/cache/man
+fi
+
+# expunge old catman pages which have not been read in a week
+if [ -d /var/cache/man ]; then
+  cd /
+  if ! dpkg-statoverride --list /var/cache/man >/dev/null 2>&1; then
+    find /var/cache/man -ignore_readdir_race ! -user man -print0 | \
+      xargs -r0 chown -f man || true
+  fi
+  start-stop-daemon --start --pidfile /dev/null --startas /bin/sh \
+	--oknodo --chuid man $iosched_idle -- -c \
+	"find /var/cache/man -type f -name '*.gz' -atime +6 -print0 | \
+	 xargs -r0 rm -f"
+fi
+
+# regenerate man database
+if [ -x /usr/bin/mandb ]; then
+    # --pidfile /dev/null so it always starts; mandb isn't really a daemon,
+    # but we want to start it like one.
+    start-stop-daemon --start --pidfile /dev/null \
+		      --startas /usr/bin/mandb --oknodo --chuid man \
+		      $iosched_idle \
+		      -- --no-purge --quiet
+fi
+
+exit 0
+
+/etc/cron.daily/apt
+#!/bin/sh
+#set -e
+#
+# This file understands the following apt configuration variables:
+# Values here are the default.
+# Create /etc/apt/apt.conf.d/02periodic file to set your preference.
+#
+#  Dir "/";
+#  - RootDir for all configuration files
+#
+#  Dir::Cache "var/cache/apt/";
+#  - Set apt package cache directory
+#
+#  Dir::Cache::Archives "archives/";
+#  - Set package archive directory
+#
+#  APT::Periodic::Enable "1";
+#  - Enable the update/upgrade script (0=disable)
+#
+#  APT::Periodic::BackupArchiveInterval "0";
+#  - Backup after n-days if archive contents changed.(0=disable)
+#
+#  APT::Periodic::BackupLevel "3";
+#  - Backup level.(0=disable), 1 is invalid.
+#
+#  Dir::Cache::Backup "backup/";
+#  - Set periodic package backup directory
+#
+#  APT::Archives::MaxAge "0"; (old, deprecated)
+#  APT::Periodic::MaxAge "0"; (new)
+#  - Set maximum allowed age of a cache package file. If a cache 
+#    package file is older it is deleted (0=disable)
+#
+#  APT::Archives::MinAge "2"; (old, deprecated)
+#  APT::Periodic::MinAge "2"; (new)
+#  - Set minimum age of a package file. If a file is younger it
+#    will not be deleted (0=disable). Useful to prevent races
+#    and to keep backups of the packages for emergency.
+#
+#  APT::Archives::MaxSize "0"; (old, deprecated)
+#  APT::Periodic::MaxSize "0"; (new)
+#  - Set maximum size of the cache in MB (0=disable). If the cache
+#    is bigger, cached package files are deleted until the size
+#    requirement is met (the oldest packages will be deleted 
+#    first).
+#
+#  APT::Periodic::Update-Package-Lists "0";
+#  - Do "apt-get update" automatically every n-days (0=disable)
+#    
+#  APT::Periodic::Download-Upgradeable-Packages "0";
+#  - Do "apt-get upgrade --download-only" every n-days (0=disable)
+#
+#  APT::Periodic::Download-Upgradeable-Packages-Debdelta "1";
+#  - Use debdelta-upgrade to download updates if available (0=disable)
+#
+#  APT::Periodic::Unattended-Upgrade "0";
+#  - Run the "unattended-upgrade" security upgrade script 
+#    every n-days (0=disabled)
+#    Requires the package "unattended-upgrades" and will write
+#    a log in /var/log/unattended-upgrades
+# 
+#  APT::Periodic::AutocleanInterval "0";
+#  - Do "apt-get autoclean" every n-days (0=disable)
+#
+#  APT::Periodic::Verbose "0";
+#  - Send report mail to root
+#      0:  no report             (or null string)
+#      1:  progress report       (actually any string)
+#      2:  + command outputs     (remove -qq, remove 2>/dev/null, add -d)
+#      3:  + trace on            
+
+check_stamp()
+{
+    stamp="$1"
+    interval="$2"
+
+    if [ $interval -eq 0 ]; then
+	debug_echo "check_stamp: interval=0"
+	# treat as no time has passed
+        return 1
+    fi
+
+    if [ ! -f $stamp ]; then
+	debug_echo "check_stamp: missing time stamp file: $stamp."
+	# treat as enough time has passed
+        return 0
+    fi
+
+    # compare midnight today to midnight the day the stamp was updated
+    stamp_file="$stamp"
+    stamp=$(date --date=$(date -r $stamp_file --iso-8601) +%s 2>/dev/null)
+    if [ "$?" != "0" ]; then
+        # Due to some timezones returning 'invalid date' for midnight on
+        # certain dates (e.g. America/Sao_Paulo), if date returns with error
+        # remove the stamp file and return 0. See coreutils bug:
+        # http://lists.gnu.org/archive/html/bug-coreutils/2007-09/msg00176.html
+        rm -f "$stamp_file"
+        return 0
+    fi
+
+    now=$(date --date=$(date --iso-8601) +%s 2>/dev/null)
+    if [ "$?" != "0" ]; then
+        # As above, due to some timezones returning 'invalid date' for midnight
+        # on certain dates (e.g. America/Sao_Paulo), if date returns with error
+        # return 0.
+        return 0
+    fi
+
+    delta=$(($now-$stamp))
+
+    # interval is in days, convert to sec.
+    interval=$(($interval*60*60*24))
+    debug_echo "check_stamp: interval=$interval, now=$now, stamp=$stamp, delta=$delta (sec)"
+
+    # remove timestamps a day (or more) in the future and force re-check
+    if [ $stamp -gt $(($now+86400)) ]; then
+         echo "WARNING: file $stamp_file has a timestamp in the future: $stamp"
+         rm -f "$stamp_file"
+         return 0
+    fi
+
+    if [ $delta -ge $interval ]; then
+        return 0
+    fi
+
+    return 1
+}
+
+update_stamp()
+{
+    stamp="$1"
+    touch $stamp
+}
+
+# we check here if autoclean was enough sizewise
+check_size_constraints()
+{
+    MaxAge=0
+    eval $(apt-config shell MaxAge APT::Archives::MaxAge)
+    eval $(apt-config shell MaxAge APT::Periodic::MaxAge)
+
+    MinAge=2
+    eval $(apt-config shell MinAge APT::Archives::MinAge)
+    eval $(apt-config shell MinAge APT::Periodic::MinAge)
+
+    MaxSize=0
+    eval $(apt-config shell MaxSize APT::Archives::MaxSize)
+    eval $(apt-config shell MaxSize APT::Periodic::MaxSize)
+
+    Cache="/var/cache/apt/archives/"
+    eval $(apt-config shell Cache Dir::Cache::archives/d)
+
+    # sanity check
+    if [ -z "$Cache" ]; then
+	echo "empty Dir::Cache::archives, exiting"
+	exit
+    fi
+
+    # check age
+    if [ ! $MaxAge -eq 0 ] && [ ! $MinAge -eq 0 ]; then
+	debug_echo "aged: ctime <$MaxAge and mtime <$MaxAge and ctime>$MinAge and mtime>$MinAge"
+	find $Cache -name "*.deb"  \( -mtime +$MaxAge -and -ctime +$MaxAge \) -and -not \( -mtime -$MinAge -or -ctime -$MinAge \) -print0 | xargs -r -0 rm -f
+    elif [ ! $MaxAge -eq 0 ]; then
+	debug_echo "aged: ctime <$MaxAge and mtime <$MaxAge only"
+	find $Cache -name "*.deb"  -ctime +$MaxAge -and -mtime +$MaxAge -print0 | xargs -r -0 rm -f
+    else
+	debug_echo "skip aging since MaxAge is 0"
+    fi
+    
+    # check size
+    if [ ! $MaxSize -eq 0 ]; then
+	# maxSize is in MB
+	MaxSize=$(($MaxSize*1024))
+
+	#get current time
+	now=$(date --date=$(date --iso-8601) +%s)
+	MinAge=$(($MinAge*24*60*60))
+
+	# reverse-sort by mtime
+	for file in $(ls -rt $Cache/*.deb 2>/dev/null); do 
+	    du=$(du -s $Cache)
+	    size=${du%%/*}
+	    # check if the cache is small enough
+	    if [ $size -lt $MaxSize ]; then
+		debug_echo "end remove by archive size:  size=$size < $MaxSize"
+		break
+	    fi
+
+	    # check for MinAge of the file
+	    if [ $MinAge -ne 0 ]; then 
+		# check both ctime and mtime 
+		mtime=$(stat -c %Y $file)
+		ctime=$(stat -c %Z $file)
+		if [ $mtime -gt $ctime ]; then
+		    delta=$(($now-$mtime))
+		else
+		    delta=$(($now-$ctime))
+		fi
+		if [ $delta -le $MinAge ]; then
+		    debug_echo "skip remove by archive size:  $file, delta=$delta < $MinAge"
+		    break
+		else
+		    # delete oldest file
+		    debug_echo "remove by archive size: $file, delta=$delta >= $MinAge (sec), size=$size >= $MaxSize"
+		    rm -f $file
+		fi
+	    fi
+	done
+    fi
+}
+
+# deal with the Apt::Periodic::BackupArchiveInterval
+do_cache_backup()
+{
+    BackupArchiveInterval="$1"
+    if [ $BackupArchiveInterval -eq 0 ]; then
+	return
+    fi
+
+    # Set default values and normalize
+    CacheDir="/var/cache/apt"
+    eval $(apt-config shell CacheDir Dir::Cache/d)
+    CacheDir=${CacheDir%/}
+    if [ -z "$CacheDir" ]; then
+	debug_echo "practically empty Dir::Cache, exiting"
+	return 0
+    fi
+
+    Cache="${CacheDir}/archives/"
+    eval $(apt-config shell Cache Dir::Cache::Archives/d)
+    if [ -z "$Cache" ]; then
+	debug_echo "practically empty Dir::Cache::archives, exiting"
+	return 0
+    fi
+
+    BackupLevel=3
+    eval $(apt-config shell BackupLevel APT::Periodic::BackupLevel)
+    if [ $BackupLevel -le 1 ]; then 
+	BackupLevel=2 ; 
+    fi
+    
+    Back="${CacheDir}/backup/"
+    eval $(apt-config shell Back Dir::Cache::Backup/d)
+    if [ -z "$Back" ]; then
+	echo "practically empty Dir::Cache::Backup, exiting" 1>&2
+	return
+    fi
+
+    CacheArchive="$(basename "${Cache}")"
+    test -n "${CacheArchive}" || CacheArchive="archives"
+    BackX="${Back}${CacheArchive}/"
+    for x in $(seq 0 1 $((${BackupLevel}-1))); do 
+	eval "Back${x}=${Back}${x}/"
+    done
+    
+    # backup after n-days if archive contents changed.
+    # (This uses hardlink to save disk space)
+    BACKUP_ARCHIVE_STAMP=/var/lib/apt/periodic/backup-archive-stamp
+    if check_stamp $BACKUP_ARCHIVE_STAMP $BackupArchiveInterval; then
+	if [ $({(cd $Cache 2>/dev/null; find . -name "*.deb"); (cd $Back0 2>/dev/null;find . -name "*.deb") ;}| sort|uniq -u|wc -l) -ne 0 ]; then
+	    mkdir -p $Back
+	    rm -rf $Back$((${BackupLevel}-1))
+	    for y in $(seq $((${BackupLevel}-1)) -1 1); do 
+		eval BackY=${Back}$y
+		eval BackZ=${Back}$(($y-1))
+		if [ -e $BackZ ]; then 
+		    mv -f $BackZ $BackY ; 
+		fi
+	    done
+	    cp -la $Cache $Back ; mv -f $BackX $Back0
+	    update_stamp $BACKUP_ARCHIVE_STAMP
+	    debug_echo "backup with hardlinks. (success)"
+	else
+	    debug_echo "skip backup since same content."
+	fi
+    else
+	debug_echo "skip backup since too new."
+    fi
+}
+
+# sleep for a random interval of time (default 30min)
+# (some code taken from cron-apt, thanks)
+random_sleep()
+{
+    RandomSleep=1800
+    eval $(apt-config shell RandomSleep APT::Periodic::RandomSleep)
+    if [ $RandomSleep -eq 0 ]; then
+	return
+    fi
+    if [ -z "$RANDOM" ] ; then
+        # A fix for shells that do not have this bash feature.
+	RANDOM=$(( $(dd if=/dev/urandom bs=2 count=1 2> /dev/null | cksum | cut -d' ' -f1) % 32767 ))
+    fi
+    TIME=$(($RANDOM % $RandomSleep))
+    debug_echo "sleeping for $TIME seconds"
+    sleep $TIME
+}
+
+
+debug_echo()
+{
+    # Display message if $VERBOSE >= 1
+    if [ "$VERBOSE" -ge 1 ]; then
+	echo $1 1>&2
+    fi
+}
+
+check_power(){
+    # laptop check, on_ac_power returns:
+    #       0 (true)    System is on main power
+    #       1 (false)   System is not on main power
+    #       255 (false) Power status could not be determined
+    # Desktop systems always return 255 it seems
+    if which on_ac_power >/dev/null; then
+        on_ac_power
+        POWER=$?
+        if [ $POWER -eq 1 ]; then
+	    debug_echo "exit: system NOT on main power"
+	    return 1
+        elif [ $POWER -ne 0 ]; then
+	    debug_echo "power status ($POWER) undetermined, continuing"
+        fi
+        debug_echo "system is on main power."
+    fi
+    return 0
+}
+
+# ------------------------ main ----------------------------
+
+if test -r /var/lib/apt/extended_states; then
+    # Backup the 7 last versions of APT's extended_states file
+    # shameless copy from dpkg cron
+    if cd /var/backups ; then
+	if ! cmp -s apt.extended_states.0 /var/lib/apt/extended_states; then
+	    cp -p /var/lib/apt/extended_states apt.extended_states
+	    savelog -c 7 apt.extended_states >/dev/null
+	fi
+    fi
+fi
+
+# check apt-config existence
+if ! which apt-config >/dev/null ; then
+	exit 0
+fi
+
+# check if the user really wants to do something
+AutoAptEnable=1  # default is yes
+eval $(apt-config shell AutoAptEnable APT::Periodic::Enable)
+
+if [ $AutoAptEnable -eq 0 ]; then
+    exit 0
+fi
+
+# Set VERBOSE mode from  apt-config (or inherit from environment)
+VERBOSE=0
+eval $(apt-config shell VERBOSE APT::Periodic::Verbose)
+debug_echo "verbose level $VERBOSE"
+if [ "$VERBOSE" -le 2 ]; then
+    # quiet for 0,1,2
+    XSTDOUT=">/dev/null"
+    XSTDERR="2>/dev/null"
+    XAPTOPT="-qq"
+    XUUPOPT=""
+else
+    XSTDOUT=""
+    XSTDERR=""
+    XAPTOPT=""
+    XUUPOPT="-d"
+fi
+if [ "$VERBOSE" -ge 3 ]; then
+    # trace output
+    set -x
+fi
+
+check_power || exit 0
+
+# check if we can lock the cache and if the cache is clean
+if which apt-get >/dev/null && ! eval apt-get check $XAPTOPT $XSTDERR ; then
+    debug_echo "error encountered in cron job with \"apt-get check\"."
+    exit 0
+fi
+
+# Global current time in seconds since 1970-01-01 00:00:00 UTC
+now=$(date +%s)
+
+# Support old Archive for compatibility.
+# Document only Periodic for all controlling parameters of this script.
+
+UpdateInterval=0
+eval $(apt-config shell UpdateInterval APT::Periodic::Update-Package-Lists)
+
+DownloadUpgradeableInterval=0
+eval $(apt-config shell DownloadUpgradeableInterval APT::Periodic::Download-Upgradeable-Packages)
+
+UnattendedUpgradeInterval=0
+eval $(apt-config shell UnattendedUpgradeInterval APT::Periodic::Unattended-Upgrade)
+
+AutocleanInterval=0
+eval $(apt-config shell AutocleanInterval APT::Periodic::AutocleanInterval)
+
+BackupArchiveInterval=0
+eval $(apt-config shell BackupArchiveInterval APT::Periodic::BackupArchiveInterval)
+
+Debdelta=1
+eval $(apt-config shell Debdelta APT::Periodic::Download-Upgradeable-Packages-Debdelta)
+
+# check if we actually have to do anything that requires locking the cache
+if [ $UpdateInterval -eq 0 ] &&
+   [ $DownloadUpgradeableInterval -eq 0 ] &&
+   [ $UnattendedUpgradeInterval -eq 0 ] &&
+   [ $BackupArchiveInterval -eq 0 ] &&
+   [ $AutocleanInterval -eq 0 ]; then
+
+    # check cache size
+    check_size_constraints
+
+    exit 0
+fi
+
+# deal with BackupArchiveInterval
+do_cache_backup $BackupArchiveInterval
+
+# sleep random amount of time to avoid hitting the 
+# mirrors at the same time
+random_sleep
+check_power || exit 0
+
+# include default system language so that "apt-get update" will
+# fetch the right translated package descriptions
+if [ -r /etc/default/locale ]; then
+    . /etc/default/locale
+    export LANG LANGUAGE LC_MESSAGES LC_ALL
+fi
+
+# update package lists
+UPDATED=0
+UPDATE_STAMP=/var/lib/apt/periodic/update-stamp
+if check_stamp $UPDATE_STAMP $UpdateInterval; then
+    # check for a new archive signing key (against the master keyring)
+    if eval apt-key net-update $XSTDERR; then
+       debug_echo "apt-key net-update (success)"
+    else
+       debug_echo "apt-key net-update (failure)"
+    fi
+    # run apt-get update
+    if eval apt-get $XAPTOPT -y update $XSTDERR; then
+	debug_echo "download updated metadata (success)."
+	if which dbus-send >/dev/null && pidof dbus-daemon >/dev/null; then
+	    if dbus-send --system / app.apt.dbus.updated boolean:true ; then
+		debug_echo "send dbus signal (success)"
+	    else
+		debug_echo "send dbus signal (error)"
+	    fi
+	else
+	    debug_echo "dbus signal not send (command not available)"
+	fi
+	update_stamp $UPDATE_STAMP
+	UPDATED=1
+        # now run apt-xapian-index if it is installed to ensure the index
+        # is up-to-date
+        if [ -x /usr/sbin/update-apt-xapian-index ]; then
+            nice ionice -c3 update-apt-xapian-index -q -u
+        fi
+    else
+	debug_echo "download updated metadata (error)"
+    fi
+else
+    debug_echo "download updated metadata (not run)."
+fi
+	
+# download all upgradeable packages (if it is requested)
+DOWNLOAD_UPGRADEABLE_STAMP=/var/lib/apt/periodic/download-upgradeable-stamp
+if [ $UPDATED -eq 1 ] && check_stamp $DOWNLOAD_UPGRADEABLE_STAMP $DownloadUpgradeableInterval; then
+    if [ $Debdelta -eq 1 ]; then
+        debdelta-upgrade >/dev/null 2>&1 || true
+    fi
+    if  eval apt-get $XAPTOPT -y -d dist-upgrade $XSTDERR; then
+	update_stamp $DOWNLOAD_UPGRADEABLE_STAMP
+	debug_echo "download upgradable (success)"
+    else
+	debug_echo "download upgradable (error)"
+    fi
+else
+    debug_echo "download upgradable (not run)"
+fi
+
+# auto upgrade all upgradeable packages
+UPGRADE_STAMP=/var/lib/apt/periodic/upgrade-stamp
+if which unattended-upgrade >/dev/null && check_stamp $UPGRADE_STAMP $UnattendedUpgradeInterval; then
+    if unattended-upgrade $XUUPOPT; then
+	update_stamp $UPGRADE_STAMP
+	debug_echo "unattended-upgrade (success)"
+    else
+	debug_echo "unattended-upgrade (error)"
+    fi
+else
+    debug_echo "unattended-upgrade (not run)"
+fi
+
+# autoclean package archive
+AUTOCLEAN_STAMP=/var/lib/apt/periodic/autoclean-stamp
+if check_stamp $AUTOCLEAN_STAMP $AutocleanInterval; then
+    if  eval apt-get $XAPTOPT -y autoclean $XSTDERR; then
+	debug_echo "autoclean (success)."
+	update_stamp $AUTOCLEAN_STAMP
+    else
+	debug_echo "autoclean (error)"
+    fi
+else
+    debug_echo "autoclean (not run)"
+fi
+
+# check cache size 
+check_size_constraints
+
+#
+#     vim: set sts=4 ai :
+#
+
+
+/etc/cron.daily/apport
+#!/bin/sh -e
+# clean all crash reports which are older than a week.
+[ -d /var/crash ] || exit 0
+find /var/crash/. ! -name . -prune -type f \( \( -size 0 -a \! -name '*.upload*' -a \! -name '*.drkonqi*' \) -o -mtime +7 \) -exec rm -f -- '{}' \;
+find /var/crash/. ! -name . -prune -type d -regextype posix-extended -regex '.*/[0-9]{12}$' \( -mtime +7 \) -exec rm -Rf -- '{}' \;
+
+/etc/cron.daily/dpkg
+#!/bin/sh
+
+# Backup the 7 last versions of dpkg's status file
+if cd /var/backups ; then
+    if ! cmp -s dpkg.status.0 /var/lib/dpkg/status ; then
+            cp -p /var/lib/dpkg/status dpkg.status
+            savelog -c 7 dpkg.status >/dev/null
+    fi
+fi
+
+
+/etc/cron.daily/update-notifier-common
+#!/bin/sh
+
+set -e
+
+[ -x /usr/lib/update-notifier/package-data-downloader ] || exit 0
+
+# Try to rerun any package data downloads that failed at package install time.
+/usr/lib/update-notifier/package-data-downloader
+
+/etc/cron.daily/popularity-contest
+#!/bin/sh
+
+# don't run if this package is removed but not purged
+if [ ! -f /usr/sbin/popularity-contest ]; then
+	exit 0
+fi
+
+unset MAILFROM
+unset MAILTO
+unset MY_HOSTID
+unset PARTICIPATE
+unset SUBMITURLS
+unset USEHTTP
+unset MTAOPS
+
+# get configuration information
+. /usr/share/popularity-contest/default.conf
+. /etc/popularity-contest.conf
+
+# don't run if MAILTO address is blank, and not configured to use HTTP POST!
+if [ -z "$MAILTO" ] && [ "yes" != "$USEHTTP" ]; then exit 0; fi
+
+# don't run if PARTICIPATE is "no" or unset!
+[ "$PARTICIPATE" = "no" ] || [ -z "$PARTICIPATE" ] && exit 0
+
+if [ -n "$HTTP_PROXY" ]; then
+  export http_proxy="$HTTP_PROXY";
+fi
+
+POPCON=/var/log/popularity-contest
+
+# Only run on the given day, to spread the load on the server a bit
+if [ "$DAY" ] && [ "$DAY" != "$(date +%w)" ] ; then
+	# Ensure that popcon runs at least once in the last week
+	if [ -f "$POPCON" ] ; then
+		now=$(date +%s)
+		lastrun=$(date -r $POPCON +%s)
+		# 6.5 days, in seconds
+		week=561600
+		if [ "$(( $now - $lastrun ))" -le "$week" ]; then
+			exit 0
+		fi
+	fi
+fi
+
+# keep old logs
+cd /var/log
+umask 022
+savelog -c 7 popularity-contest >/dev/null
+
+run_popcon()
+{
+	su -s /bin/sh -c "/usr/sbin/popularity-contest" nobody
+}
+
+do_sendmail()
+{
+	if [ -n "$MAILFROM" ]; then
+		sendmail -oi $MTAOPS -f "$MAILFROM" $MAILTO
+	else
+		sendmail -oi $MTAOPS $MAILTO
+	fi
+}
+
+# generate the popularity contest data
+
+run_popcon > $POPCON
+
+SUBMITTED=no
+
+# try to post the report through http POST
+if [ "$SUBMITURLS" ] && [ "yes" = "$USEHTTP" ]; then
+    for URL in $SUBMITURLS ; do
+	if setsid /usr/share/popularity-contest/popcon-upload \
+	    -u $URL -f $POPCON -C 2>/dev/null ; then
+		SUBMITTED=yes
+	else
+		logger -t popularity-contest "unable to submit report to $URL."
+	fi
+    done
+fi
+
+# try to email the popularity contest data
+
+if [ yes != "$SUBMITTED" ] && [ -n "$MAILTO" ]; then
+    if [ -x "`which sendmail 2>/dev/null`" ]; then
+	(
+	    if [ -n "$MAILFROM" ]; then
+	        	echo "From: <$MAILFROM>"
+	    	echo "Sender: <$MAILFROM>"
+	    fi
+	    echo "To: $MAILTO"
+	    echo "Subject: popularity-contest submission"
+	    echo "MIME-Version: 1.0"
+	    echo "Content-Type: text/plain"
+	    echo
+	    cat $POPCON
+	) | do_sendmail
+	SUBMITTED=yes
+    else
+	logger -t popularity-contest "unable to submit report using sendmail."
+    fi
+fi
+
+if [ "yes" != "$SUBMITTED" ] ; then
+	logger -t popularity-contest "unable to submit report."
+fi
+
+/etc/cron.daily/logrotate
+#!/bin/sh
+
+# Clean non existent log file entries from status file
+cd /var/lib/logrotate
+test -e status || touch status
+head -1 status > status.clean
+sed 's/"//g' status | while read logfile date
+do
+    [ -e "$logfile" ] && echo "\"$logfile\" $date"
+done >> status.clean
+mv status.clean status
+
+test -x /usr/sbin/logrotate || exit 0
+/usr/sbin/logrotate /etc/logrotate.conf
+
+/etc/cron.daily/upstart
+#!/bin/sh
+# Emit an Upstart system event, that will propagate to the Session Inits
+# via the upstart-event-bridge(8), requesting that the Session Inits
+# rotate their logs.
+#
+# Note that system-level Upstart logs are handled separately using a
+# logrotate script.
+
+[ -x /sbin/initctl ] || exit 0
+
+/sbin/initctl emit rotate-logs
+
+/etc/cron.hourly/.placeholder
+# DO NOT EDIT OR REMOVE
+# This file is a simple placeholder to keep dpkg from removing this directory
+
+/etc/cron.monthly/.placeholder
+# DO NOT EDIT OR REMOVE
+# This file is a simple placeholder to keep dpkg from removing this directory
+
+/etc/cron.monthly/0anacron
+#!/bin/sh
+#
+# anacron's cron script
+#
+# This script updates anacron time stamps. It is called through run-parts
+# either by anacron itself or by cron.
+#
+# The script is called "0anacron" to assure that it will be executed
+# _before_ all other scripts.
+
+test -x /usr/sbin/anacron || exit 0
+anacron -u cron.monthly
+
+/etc/crontab
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# m h dom mon dow user	command
+17 *	* * *	root    cd / && run-parts --report /etc/cron.hourly
+25 6	* * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6	* * 7	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+#
+
+/etc/cron.weekly/.placeholder
+# DO NOT EDIT OR REMOVE
+# This file is a simple placeholder to keep dpkg from removing this directory
+
+/etc/cron.weekly/0anacron
+#!/bin/sh
+#
+# anacron's cron script
+#
+# This script updates anacron time stamps. It is called through run-parts
+# either by anacron itself or by cron.
+#
+# The script is called "0anacron" to assure that it will be executed
+# _before_ all other scripts.
+
+test -x /usr/sbin/anacron || exit 0
+anacron -u cron.weekly
+
+/etc/cron.weekly/man-db
+#!/bin/sh
+#
+# man-db cron weekly
+
+set -e
+
+iosched_idle=
+# Don't try to change I/O priority in a vserver or OpenVZ.
+if ! egrep -q '(envID|VxID):.*[1-9]' /proc/self/status && \
+   ([ ! -d /proc/vz ] || [ -d /proc/bc ]); then
+    iosched_idle='--iosched idle'
+fi
+
+if ! [ -d /var/cache/man ]; then
+    # Recover from deletion, per FHS.
+    mkdir -p /var/cache/man
+    chown man:root /var/cache/man || true
+    chmod 2755 /var/cache/man
+fi
+
+# regenerate man database
+if [ -x /usr/bin/mandb ]; then
+    # --pidfile /dev/null so it always starts; mandb isn't really a daemon,
+    # but we want to start it like one.
+    start-stop-daemon --start --pidfile /dev/null \
+		      --startas /usr/bin/mandb --oknodo --chuid man \
+		      $iosched_idle \
+		      -- --quiet
+fi
+
+exit 0
+
+/etc/cron.weekly/fstrim
+#!/bin/sh
+# call fstrim-all to trim all mounted file systems which support it
+set -e
+
+# This only runs on Intel and Samsung SSDs by default, as some SSDs with faulty
+# firmware may encounter data loss problems when running fstrim under high I/O
+# load (e. g.  https://launchpad.net/bugs/1259829). You can append the
+# --no-model-check option here to disable the vendor check and run fstrim on
+# all SSD drives.
+exec fstrim-all
+
+/etc/cron.weekly/apt-xapian-index
+#!/bin/sh
+
+CMD=/usr/sbin/update-apt-xapian-index
+
+# ionice should not be called in a virtual environment
+# (similar to man-db cronjobs)
+egrep -q '(envID|VxID):.*[1-9]' /proc/self/status || IONICE=/usr/bin/ionice
+
+# Check if we're on battery
+if which on_ac_power >/dev/null 2>&1; then
+    on_ac_power >/dev/null 2>&1
+    ON_BATTERY=$?
+
+    # Here we use "-eq 1" instead of "-ne 0" because
+    # on_ac_power could also return 255, which means
+    # it can't tell whether we are on AC or not. In
+    # that case, run update-a-x-i nevertheless.
+    [ "$ON_BATTERY" -eq 1 ] && exit 0
+fi
+
+# Rebuild the index
+if [ -x "$CMD" ]
+then
+	if [ -x "$IONICE" ]
+	then
+		nice -n 19 $IONICE -c 3 $CMD --quiet
+	else
+		nice -n 19 $CMD --quiet
+	fi
+fi
+
+/etc/cron.weekly/update-notifier-common
+#!/bin/sh
+
+set -e
+
+[ -x /usr/lib/ubuntu-release-upgrader/release-upgrade-motd ] || exit 0
+
+# Check to see whether there is a new version of Ubuntu available
+/usr/lib/ubuntu-release-upgrader/release-upgrade-motd

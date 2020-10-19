@@ -1,0 +1,210 @@
+total 13940
+drwxr-xr-x  2 root    root      12288 Sep  6 14:52 .
+drwxr-xr-x 10 root    root       4096 Aug  3  2016 ..
+-rwxr-xr-x  1 root    root      22704 Dec  9  2016 aa-exec
+-rwxr-xr-x  1 root    root       7281 Dec  9  2016 aa-status
+lrwxrwxrwx  1 root    root         10 Feb 17  2017 accept -> cupsaccept
+-rwxr-xr-x  1 root    root      10480 Sep 23  2014 accessdb
+-rwxr-xr-x  1 root    root      48056 Apr  3  2014 acpid
+lrwxrwxrwx  1 root    root          7 Mar 20  2017 addgroup -> adduser
+-rwxr-xr-x  1 root    root        695 Aug 27  2013 add-shell
+-rwxr-xr-x  1 root    root      35125 Nov  7  2013 adduser
+-rwxr-xr-x  1 root    root      95144 Jan 16  2014 alsactl
+-rwxr-xr-x  1 root    root      34840 Feb 19  2014 anacron
+lrwxrwxrwx  1 root    root          9 Dec  9  2016 apparmor_status -> aa-status
+-rwxr-xr-x  1 root    root       1395 Jun 12  2015 aptd
+-rwxr-xr-x  1 root    root      55392 Aug  5  2014 arp
+-rwxr-xr-x  1 root    root      39528 Jul 23  2015 arpd
+-rwxr-xr-x  1 root    root      11026 Jan 14  2014 aspell-autobuildhash
+-rwxr-xr-x  1 root    root      35616 Jul  1  2016 avahi-autoipd
+-rwxr-xr-x  1 root    root     127368 Jul  1  2016 avahi-daemon
+-rwxr-xr-x  1 root    root     160536 Jan 28  2015 bccmd
+-rwxr-xr-x  1 root    root      19208 Sep 16  2013 biosdecode
+-rwxr-xr-x  1 root    root     930024 Jan 28  2015 bluetoothd
+-rwxr-xr-x  1 root    root      27056 Apr 21  2015 chat
+-rwxr-xr-x  1 root    root      51448 Jan 26  2016 chgpasswd
+-rwxr-xr-x  1 root    root      47448 Jan 26  2016 chpasswd
+-rwxr-xr-x  1 root    root      31392 Mar 10  2016 chroot
+lrwxrwxrwx  1 root    root          4 Mar 20  2017 cpgr -> cppw
+-rwxr-xr-x  1 root    root      49424 Jan 26  2016 cppw
+-rwxr-xr-x  1 root    root       6312 Mar 23  2014 cracklib-check
+-rwxr-xr-x  1 root    root        218 Mar 23  2014 cracklib-format
+-rwxr-xr-x  1 root    root      10432 Mar 23  2014 cracklib-packer
+-rwxr-xr-x  1 root    root       6296 Mar 23  2014 cracklib-unpacker
+-rwxr-xr-x  1 root    root        990 Mar 23  2014 create-cracklib-dict
+-rwxr-xr-x  1 root    root      44376 Feb  8  2013 cron
+-rwxr-xr-x  1 root    root      10240 Feb 17  2017 cupsaccept
+-rwxr-xr-x  1 root    root      10240 Feb 17  2017 cupsaddsmb
+-rwxr-xr-x  1 root    root      52448 Dec 16  2015 cups-browsed
+-rwxr-xr-x  1 root    root      10240 Feb 17  2017 cupsctl
+-rwxr-xr-x  1 root    root     408104 Feb 17  2017 cupsd
+lrwxrwxrwx  1 root    root         10 Feb 17  2017 cupsdisable -> cupsaccept
+lrwxrwxrwx  1 root    root         10 Feb 17  2017 cupsenable -> cupsaccept
+-rwxr-xr-x  1 root    root      26928 Feb 17  2017 cupsfilter
+-rwxr-xr-x  1 root    root      26593 Mar 27  2014 cups-genppdupdate
+lrwxrwxrwx  1 root    root         10 Feb 17  2017 cupsreject -> cupsaccept
+-rwxr-xr-x  1 root    root      14584 Nov 23  2016 cytune
+lrwxrwxrwx  1 root    root          7 Mar 20  2017 delgroup -> deluser
+-rwxr-xr-x  1 root    root      16516 Nov  7  2013 deluser
+-rwxr-xr-x  1 root    root     100792 Sep 16  2013 dmidecode
+-rwxr-xr-x  1 root    root     295040 May  1  2015 dnsmasq
+-rwxr-xr-x  1 root    root       3604 Feb 23  2014 dpkg-preconfigure
+-rwxr-xr-x  1 root    root       4784 Feb 23  2014 dpkg-reconfigure
+-rwxr-xr-x  1 root    root      10424 Sep  9  2015 e2freefrag
+-rwxr-xr-x  1 root    root      27096 Sep  9  2015 e4defrag
+-rwxr-xr-x  1 root    root      10472 Nov 23  2016 fdformat
+-rwxr-xr-x  1 root    root      14584 Sep  9  2015 filefrag
+-rwxr-xr-x  1 root    root       4385 Mar 27  2014 gconf-schemas
+-rwxr-xr-x  1 root    root      13573 Feb 18  2014 getweb
+-rwxr-xr-x  1 root    root       2223 Mar 16  2014 gnome-menus-blacklist
+-rwxr-xr-x  1 root    root      55576 Jan 26  2016 groupadd
+-rwxr-xr-x  1 root    root      51344 Jan 26  2016 groupdel
+-rwxr-xr-x  1 root    root      66128 Jan 26  2016 groupmod
+-rwxr-xr-x  1 root    root      51408 Jan 26  2016 grpck
+-rwxr-xr-x  1 root    root      47152 Jan 26  2016 grpconv
+-rwxr-xr-x  1 root    root      47152 Jan 26  2016 grpunconv
+lrwxrwxrwx  1 root    root         35 Mar 20  2017 grub-bios-setup -> ../lib/grub/i386-pc/grub-bios-setup
+-rwxr-xr-x  1 root    root     967152 Aug  2  2016 grub-install
+-rwxr-xr-x  1 root    root     759592 Aug  2  2016 grub-macbless
+-rwxr-xr-x  1 root    root       7969 Aug  2  2016 grub-mkconfig
+-rwxr-xr-x  1 root    root     196856 Aug  2  2016 grub-mkdevicemap
+-rwxr-xr-x  1 root    root     772136 Aug  2  2016 grub-probe
+-rwxr-xr-x  1 root    root       4113 Aug  2  2016 grub-reboot
+-rwxr-xr-x  1 root    root       3563 Aug  2  2016 grub-set-default
+-rwxr-xr-x  1 root    root       4777 Dec  2  2015 guest-account
+-rwxr-xr-x  1 root    root     100736 Jan 28  2015 hciattach
+-rwxr-xr-x  1 root    root     168704 Jan 28  2015 hciconfig
+-rwxr-xr-x  1 root    root      27088 Jan 28  2015 hciemu
+lrwxrwxrwx  1 root    root         23 Mar 20  2017 hpssd -> ../share/hplip/hpssd.py
+-rwxr-xr-x  1 root    root      35384 May 26  2016 iconvconfig
+-rwxr-xr-x  1 root    root      12717 May 14  2013 install-docs
+-rwxr-xr-x  1 root    root       4551 Dec  5  2012 install-sgmlcatalog
+-rwxr-xr-x  1 root    root      14731 Feb 16  2016 invoke-rc.d
+lrwxrwxrwx  1 root    root         14 Mar 20  2017 ip6tables-apply -> iptables-apply
+-rwxr-xr-x  1 root    root       7016 Jan  8  2014 iptables-apply
+-rwxr-xr-x  1 root    root      44168 Sep 11  2015 irqbalance
+-rwxr-xr-x  1 root    root      12872 Jan 14  2014 ispell-autobuildhash
+-rwxr-xr-x  1 root    root      23160 Apr  2  2014 kerneloops
+-rwxr-xr-x  1 root    root       2595 Mar  6  2010 laptop-detect
+-rwxr-xr-x  1 root    root      14608 Nov 23  2016 ldattach
+-rwxr-xr-x  1 root    root     242312 Dec  2  2015 lightdm
+-rwxr-xr-x  1 root    root       2978 Dec  2  2015 lightdm-session
+-rwxr-xr-x  1 root    root       6575 Feb 14  2014 locale-gen
+-rwxr-xr-x  1 root    root      64560 Jan 22  2014 logrotate
+-rwxr-xr-x  1 root    root      22528 Feb 17  2017 lpadmin
+-rwxr-xr-x  1 root    root      10296 Feb 17  2017 lpc
+-rwxr-xr-x  1 root    root      10240 Feb 17  2017 lpinfo
+-rwxr-xr-x  1 root    root      10240 Feb 17  2017 lpmove
+-rwxr-xr-x  1 root    root       3761 Aug 27  2013 make-ssl-cert
+-rwxr-xr-x  1 root    root      10051 Mar  3  2014 mkinitramfs
+-rwxr-xr-x  1 root    root      10440 Sep  9  2015 mklost+found
+-rwxr-xr-x  1 root    root     930408 Nov 12  2015 ModemManager
+-rwxr-xr-x  1 root    root     106208 Oct  1  2012 netscsid
+-rwxr-xr-x  1 root    root    1124384 Feb  2  2016 NetworkManager
+-rwxr-xr-x  1 root    root      72472 Jan 26  2016 newusers
+-rwxr-xr-x  1 root    root      14656 Jan  8  2014 nfnl_osf
+-rwxr-xr-x  1 root    root       6264 Jan 26  2016 nologin
+-rwxr-xr-x  1 root    root     106832 Oct  5  2016 ntpdate
+-rwxr-xr-x  1 root    root        593 Oct  5  2016 ntpdate-debian
+-rwxr-xr-x  1 root    root      10368 Sep 16  2013 ownership
+-rwxr-xr-x  1 root    root      19550 Mar 16  2016 pam-auth-update
+-rwxr-xr-x  1 root    root       2888 Mar 16  2016 pam_getenv
+-rwxr-xr-x  1 root    root      10576 Mar 16  2016 pam_timestamp_check
+-rwxr-xr-x  1 root    root       4170 Dec 11  2013 paperconfig
+lrwxrwxrwx  1 root    root         29 Mar 20  2017 pm-hibernate -> ../lib/pm-utils/bin/pm-action
+-rwxr-xr-x  1 root    root       2335 Feb 16  2016 pm-powersave
+lrwxrwxrwx  1 root    root         29 Mar 20  2017 pm-suspend -> ../lib/pm-utils/bin/pm-action
+lrwxrwxrwx  1 root    root         29 Mar 20  2017 pm-suspend-hybrid -> ../lib/pm-utils/bin/pm-action
+-rwxr-xr-x  1 root    root        543 May 13  2013 popcon-largest-unused
+-rwxr-xr-x  1 root    root       4259 May 13  2013 popularity-contest
+-rwxr-xr-x  1 root    root      60931 Mar  7  2013 pppconfig
+-rwsr-xr--  1 root    dip      347296 Apr 21  2015 pppd
+-rwxr-xr-x  1 root    root      18768 Apr 21  2015 pppdump
+-rwxr-xr-x  1 root    root      18220 Jul  3  2011 pppoeconf
+-rwxr-xr-x  1 root    root      18816 Apr 21  2015 pppoe-discovery
+-rwxr-xr-x  1 root    root      14592 Apr 21  2015 pppstats
+-rwxr-xr-x  1 root    root      69856 May 24  2012 pptp
+-rwxr-xr-x  1 root    root       7076 May 24  2012 pptpsetup
+-rwxr-xr-x  1 root    root      47288 Jan 26  2016 pwck
+-rwxr-xr-x  1 root    root      43032 Jan 26  2016 pwconv
+-rwxr-xr-x  1 root    root      33944 Jan 26  2016 pwunconv
+-rwxr-xr-x  1 root    root      14736 Nov 23  2016 readprofile
+lrwxrwxrwx  1 root    root         10 Feb 17  2017 reject -> cupsaccept
+-rwxr-xr-x  1 root    root       2932 Jan 14  2014 remove-default-ispell
+-rwxr-xr-x  1 root    root       2931 Jan 14  2014 remove-default-wordlist
+-rwxr-xr-x  1 root    root        749 Aug 27  2013 remove-shell
+-rwxr-xr-x  1 root    root      10480 Oct 21  2013 rfkill
+lrwxrwxrwx  1 root    root         21 Mar 20  2017 rmt -> /etc/alternatives/rmt
+-rwxr-xr-x  1 root    root      52136 Nov 17  2016 rmt-tar
+-rwxr-xr-x  1 root    root     521824 May  6  2015 rsyslogd
+-rwxr-xr-x  1 root    root      23408 Nov 23  2016 rtcwake
+-rwxr-xr-x  1 root    root      10416 Oct 25  2013 rtkitctl
+-rwxr-xr-x  1 root    root      10600 Jan 12  2014 safe_finger
+-rwxr-xr-x  1 root    root      10979 Dec 12  2016 samba_kcc
+-rwxr-xr-x  1 root    root      64584 May  9  2014 saned
+-rwxr-xr-x  1 root    root       1877 Jan 14  2014 select-default-ispell
+-rwxr-xr-x  1 root    root       1867 Jan 14  2014 select-default-wordlist
+-rwxr-xr-x  1 root    root       4873 Mar 12  2014 service
+-rwxr-xr-x  1 root    root      10456 Feb 18  2013 setvesablank
+-rwxr-xr-x  1 root    root        936 Nov 17  2016 tarcat
+-rwxr-xr-x  1 root    root      10456 Jan 12  2014 tcpd
+-rwxr-xr-x  1 root    root      23048 Jan 12  2014 tcpdchk
+-rwxr-xr-x  1 root    root      18864 Jan 12  2014 tcpdmatch
+-rwxr-xr-x  1 root    root    1113712 Feb 21  2017 tcpdump
+-rwxr-xr-x  1 root    root     588360 May 18  2016 thermald
+-rwxr-xr-x  1 root    root      11056 May 22  2012 toshsat1800-irdasetup
+-rwxr-xr-x  1 root    root      10400 Jan 12  2014 try-from
+-rwxr-xr-x  1 root    root      10488 Nov 23  2016 tunelp
+-rwxr-xr-x  1 root    root        106 Oct 19  2009 tzconfig
+-rwxr-xr-x  1 root    root       3926 Feb 28  2014 ufw
+-rwxr-xr-x  1 root    root     388024 Jan 28  2015 unity-greeter
+-rwxr-xr-x  1 root    root       3522 Feb 23  2014 update-apt-xapian-index
+-rwxr-xr-x  1 root    root       4276 Feb  8  2016 update-ca-certificates
+-rwxr-xr-x  1 root    root       9366 Dec  5  2012 update-catalog
+-rwxr-xr-x  1 root    root       1182 Feb  1  2014 update-cracklib
+lrwxrwxrwx  1 root    root         24 Mar 20  2017 update-default-aspell -> update-dictcommon-aspell
+-rwxr-xr-x  1 root    root       9345 Jan 14  2014 update-default-ispell
+-rwxr-xr-x  1 root    root       7152 Jan 14  2014 update-default-wordlist
+-rwxr-xr-x  1 root    root        885 Jan 14  2014 update-dictcommon-aspell
+-rwxr-xr-x  1 root    root        780 Jan 14  2014 update-dictcommon-hunspell
+-rwxr-xr-x  1 root    root       5851 Dec 25  2013 update-fonts-alias
+-rwxr-xr-x  1 root    root       4075 Dec 25  2013 update-fonts-dir
+-rwxr-xr-x  1 root    root       6243 Dec 25  2013 update-fonts-scale
+-rwxr-xr-x  1 root    root         64 May 13  2015 update-grub
+lrwxrwxrwx  1 root    root         11 Mar 20  2017 update-grub2 -> update-grub
+-rwxr-xr-x  1 root    root        241 Aug 16  2011 update-grub-gfxpayload
+-rwxr-xr-x  1 root    root        450 Dec  7  2016 update-gsfontmap
+-rwxr-xr-x  1 root    root        600 Jun 30  2015 update-icon-caches
+-rwxr-xr-x  1 root    root        596 May  9  2014 update-icon-caches.gtk2
+-rwxr-xr-x  1 root    root       6199 Jun  4  2012 update-inetd
+-rwxr-xr-x  1 root    root       1691 Dec 10  2013 update-info-dir
+-rwxr-xr-x  1 root    root       9164 May 31  2012 update-initramfs
+-rwxr-xr-x  1 root    root       3063 Sep 14  2010 update-locale
+-rwxr-xr-x  1 root    root       8520 Jan  6  2015 update-mime
+-rwxr-xr-x  1 root    root      31176 Apr  9  2014 update-passwd
+-rwxr-xr-x  1 root    root       2905 Nov 11  2015 update-pciids
+-rwxr-xr-x  1 root    root      16615 Feb 16  2016 update-rc.d
+lrwxrwxrwx  1 root    root         47 Nov  3  2016 update-software-center -> ../share/software-center/update-software-center
+-rwxr-xr-x  1 root    root       1076 Nov 11  2015 update-usbids
+-rwxr-xr-x  1 root    root      16674 Nov  7  2012 update-xmlcatalog
+-rwxr-xr-x  1 root    root       1524 May 13  2015 upgrade-from-grub-legacy
+-rwxr-xr-x  1 root    root      53264 Apr  8  2014 usb_modeswitch
+-rwxr-xr-x  1 root    root      43864 Apr  8  2014 usb_modeswitch_dispatcher
+-rwxr-xr-x  1 root    root      52376 Oct 21  2013 usbmuxd
+-rwxr-xr-x  1 root    root     110456 Jan 26  2016 useradd
+-rwxr-xr-x  1 root    root      80824 Jan 26  2016 userdel
+-rwxr-xr-x  1 root    root     110296 Jan 26  2016 usermod
+-rwsr-sr-x  1 libuuid libuuid   18904 Nov 23  2016 uuidd
+-rwxr-xr-x  1 root    root       1773 Dec 28  2005 validlocale
+-rwxr-xr-x  1 root    root      14664 Dec 20  2012 vbetool
+-rwxr-xr-x  1 root    root       6344 Feb 18  2013 vcstime
+lrwxrwxrwx  1 root    root          4 Mar 20  2017 vigr -> vipw
+-rwxr-xr-x  1 root    root      53808 Jan 26  2016 vipw
+-rwxr-xr-x  1 root    root     213952 Oct 14  2016 visudo
+lrwxrwxrwx  1 root    root         37 Sep  6 14:52 vmtoolsd -> /usr/lib/vmware-tools/sbin64/vmtoolsd
+lrwxrwxrwx  1 root    root         43 Sep  6 14:52 vmware-checkvm -> /usr/lib/vmware-tools/sbin64/vmware-checkvm
+lrwxrwxrwx  1 root    root         37 Sep  6 14:52 vmware-namespace-cmd -> /usr/lib/vmware-tools/bin64/appLoader
+lrwxrwxrwx  1 root    root         43 Sep  6 14:52 vmware-rpctool -> /usr/lib/vmware-tools/sbin64/vmware-rpctool
+lrwxrwxrwx  1 root    root         37 Sep  6 14:52 vmware-vmblock-fuse -> /usr/lib/vmware-tools/bin64/appLoader
+-rwxr-xr-x  1 root    root      14600 Sep 16  2013 vpddecode
+-rwxr-xr-x  1 root    root      51664 May 26  2016 zic

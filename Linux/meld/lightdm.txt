@@ -1,0 +1,6 @@
+[Seat:*]
+greeter-session=unity-greeter
+greeter-show-remote-login=false
+greeter-hide-users=true
+greeter-show-manual-login=true
+allow-guest=false

@@ -1,0 +1,55 @@
+# GDM configuration storage
+#
+# See /usr/share/gdm/gdm.schemas for a list of available options.
+
+[daemon]
+# Enabling automatic login
+  AutomaticLoginEnable = false
+  FlexibleXServers=5
+  AlwaysRestartServer=false
+  DefaultPath=/bin:/usr/bin:/usr/bin/X11:/usr/local/bin
+  DisplayInitDir=etc/gdm3/Init
+  GnomeDefaultSession=share/gnome/default.session
+  Group=gdm
+  KillInitClients=true
+  #LogDir=var/gdm
+  PidFile=var/run/gdm.pid
+  PostSessionScriptDir=etc/gdm3/PostSession
+  PreSessionScriptDir=etc/gdm3/PreSession
+  RootPath=/sbin:/usr/sbin:/bin:/usr/bin:/usr/bin/X11:/usr/local/bin
+  ServAuthDir=/var/gdm
+  SessionDir=etc/gdm3/Sessions
+  StandardXServer=/usr/bin/X11/X
+  UserAuthFBDir=/tmp
+
+
+
+# Enabling timed login
+  TimedLoginEnable=true
+#  TimedLogin = user1
+  TimedLoginDelay=30
+
+[security]
+   AllowRoot=false
+   DisallowTcp = true
+   RelaxPermissions=0
+   AllowRemoteAutoLogin=false
+   RetryDelay=3
+   AllowRemoteRoot=false
+   SessionMaxFile=524288
+   UserMaxFile=65536
+   VerboseAuth=true
+
+[xdmcp]
+   DisplaysPerHost=1
+[greeter]
+# Only include selected logins in the greeter
+# IncludeAll = false
+# Include = user1,user2
+
+[chooser]
+
+[debug]
+# More verbose logs
+# Additionally lets the X server dump core if it crashes
+ Enable = false
