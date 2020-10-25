@@ -54,13 +54,18 @@ kernel.panic = 10
 fs.protected_hardlinks = 1
 fs.protected_symlinks = 1
 kernel.ctrl-alt-del = 0
+kernel.core_uses_pid = 1
 kernel.sysrq = 0
+kernel.yama.ptrace_scope = 3
 fs.suid_dumpable = 0
 vm.dirty_ratio = 10
 vm.dirty_background_ratio = 5
 vm.vfs_cache_pressure = 50
 vm.swappiness = 10
 net.ipv4.tcp_timestamps = 0
+net.ipv4.tcp_rfc1337 = 1
+net.ipv4.tcp_tw_recycle = 0
+
 
 # Uncomment the next two lines to enable Spoof protection (reverse-path filter)
 # Turn on Source Address Verification in all interfaces to
