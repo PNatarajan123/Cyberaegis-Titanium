@@ -27,6 +27,7 @@ LogLevel VERBOSE
 LoginGraceTime 300
 PermitRootLogin no
 StrictModes yes
+PermitTTY no
 
 RSAAuthentication yes
 PubkeyAuthentication yes
