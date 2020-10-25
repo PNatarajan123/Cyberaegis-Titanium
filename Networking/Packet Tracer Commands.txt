@@ -1,0 +1,329 @@
+﻿All:
+hostname [hostname]
+interface [interface]
+ip address [ip address] [subnet mask]
+ip ospf network point-to-point (for loopback)
+no shutdown
+Switches & PCs:
+Switch(config)# ip default-gateway [ip address]
+First usable address of the network
+
+
+Static Routes:
+Router(config)# ip route [network address] [subnet mask] [next-hop IP/connected interface]
+Default Static Routes:
+Destination address to quad-zero (0.0.0.0)
+
+
+OSPF:
+router ospf [process id]
+router-id [router id]
+network [network address] [wildcard mask] area 0 all connected networks (interfaces)
+passive-interface [any interface not connected to another router]
+Routers Connected to Internet:
+        default-information originate stop router updates from being forwarded to internet
+
+
+DHCP:
+ip dhcp excluded-address [lowest excluded address  highest excluded address]
+ip dhcp pool [pool name]
+network [network address] [subnet mask]
+default-router [default-gateway]
+dns-server [dns server ip]
+domain-name [domain name]
+Router(config)# int [interface]
+Router(config-if)# ip helper-address [ip address] for routers connected to router with dhcp pool is first usable address of network to connect to router
+
+
+VLAN:
+vlan [vlan number]
+        name [name of vlan]
+int vlan [vlan number]
+        no shutdown
+Trunk (switch to switch or switch to router):
+Switch(config)# int range [range of interfaces]
+Switch(config-if)# switchport mode trunk
+Switch(config-if)# switchport nonegotiate
+Switch(config-if)# switchport trunk allowed vlan [#]
+Switch(config-if)# switchport trunk native vlan [#]
+Access (switch to pc):
+Switch(config-if)#switchport mode access
+Switch(config-if)#switchport nonegotiate
+Switch(config-if)#switchport access vlan [#]
+
+
+Inter-vlan:
+Legacy:
+not different
+Router-on-a-stick:
+Router(config)# int [interface] [subinterface (the .something)]
+Router(config-subif)# encapsulation dot1q [vlan id] native (if native)
+Router(config-subif)# ip address [ip address] [subnet mask]
+Switch(config-if)# switchport mode trunk
+Switch(config-if)# switchport trunk native vlan {vlan-id}
+Switch(config-if)# switchport trunk allowed vlan {vlan1}[,vlan2,vlan3…]
+Switch(config-if)# switchport nonegotiate
+Multilayer Switch:
+MLS(config)# ip routing
+MLS(config-if)# switchport trunk encapsulation dot1q
+MLS(config-if)# switchport nonegotiate
+MLS(config-if)# switchport mode trunk
+MLS(config-if)# switchport trunk allowed vlan [range]
+MLS(config-if)# switchport trunk native vlan 99
+
+
+DNS:
+ip domain-lookup
+ip domain-name [website name]
+ip name-server [DNS server]
+
+
+SSH:
+ip domain-name [domain name]
+crypto key generate rsa
+        always set to 1024 unless otherwise stated
+ip ssh version 2
+username [username] secret [secret]
+line vty 0 15
+        login local
+        transport input ssh
+exec-timeout [minutes]
+ip ssh time-out [seconds of time out]
+ip ssh authentication-retries [number of retries]
+Port Security (switches):
+shutdown (all unused ports)
+switchport port-security mac-address [mac-address]
+        specifies an allowed mac address and adds it to the running configuration
+switchport port-security mac-address sticky
+        enables sticky learning
+        all dynamically learned mac addresses will be added to running configuration 
+switchport port-security maximum [amount]
+        maximum number of allowed mac addresses per port
+switchport port-security violation [shutdown/restrict/protect]
+        shutdown - shuts down all ports, gets error message
+        restrict - drops all packages, gets error message
+        protect - drops all packages, no error message
+copy running-config startup-config
+        transfers running config to startup config, keeps config after device is rebooted
+
+
+Password:
+enable secret [password]
+        encrypted
+enable password [password]
+        plaintext
+line console 0
+        password [password]
+        login local
+        security passwords min-length [length]
+exec-timeout [minutes]
+service password-encryption
+        encrypts all passwords on that device 
+enable secret [password]
+username [name] secret [password]
+
+
+Banner motd:
+banner motd [banner message]
+
+
+Rip:
+(config): router rip - Enters rip configuration mode (only runs one process)
+(rip-config): network [network address] - enables updates to be sent and received on interfaces in this network (without ripv2, will force summarization to a octet boundary in the routing table) 
+(rip-config): version 2 - updates to ripv2 and only listens for ripv2 updates 
+(rip-config): no auto-summary - allows vlsm (only available with ripv2)
+(rip-config): passive-interface default - sets all interfaces to passive 
+(rip-config): passive-interface [interface] 
+(rip-config): default-information originate-includes a known default route in updates
+
+
+NAT:
+Static NAT:
+ip nat inside source static [local/inside ip address] [global/outside ip address] sets up the one-to-one translation between private and public IP addresses
+interface [interface] goes into Interface Configuration Mode from Global Configuration Mode
+        ip nat [inside/outside] identifies interface as connected to local network/not connected to local network    
+Dynamic NAT & PAT:   
+ip nat pool [name] [starting public ip address] [ending public ip address] netmask [subnet mask] Defines the pool of global addresses for translation
+access-list [number] permit [source network address] [source wildcard] Configures a standard access list permitting addresses for translation
+ip nat inside source list [access list number] pool [name] Establishes dynamic source translation with access list + pool name listed in prior steps
+interface [interface]
+        ip nat inside
+        ip nat outside
+
+
+ACL:
+Standard:
+ip access-list standard [name/number]
+        [permit/deny/remark] [ip address] [wildcard mask]
+interface [interface] close to destination
+ip access-group [access-list number or access-list name] [in or out]
+Extended:
+access-list [access-list-number] [deny | permit | remark] source [ source-wildcard ][ log ] 
+interface [interface] close to source
+ip access-group [access-list number or access-list name] [in or out]
+
+
+AAA:
+aaa new-model enables aaa
+tacacs-server host [ip-address] single-connection 
+tacacs-server key [key]
+radius-server host [ip-address]
+radius-server key [key]
+aaa authentication type { default | list-name } memory1 … [memory4]
+        use ? command
+
+
+VPN:
+crypto isakmp policy [ISAKMP Policy Number]
+encrypt [Encryption Method]
+hash [Hashing Method]
+authentication pre-share
+group [Diffie Hellman Group Number]
+lifetime [Lifetime]
+crypto isakmp key [ISAKMP key] address [ip address of the OTHER router]
+crypto isakmp transform-set [transform-set name] ah-[AH Transform]-hmac esp-[ESP Encryption Cipher] esp-[ESP Authentication Hash]-hmac
+crypto map [Crypto Map Name] [IPSec Map Number] ipsec-isakmp
+set peer [ip address of OTHER router]
+set pfs group[Diffie Hellman Group Number]
+make sure no space between “group” and group #, e.g. “set pfs group5”
+set transform-set [transform-set name] 
+match address 101 (Use ACL 101 that we made earlier)
+
+
+ASA:
+enable secret > enable password
+passwd [password]
+        Does the same thing as:
+        line console 0
+        password <password>
+        login
+show ip interfaces brief > show interfaces ip brief
+show ip route > show route
+show ip nat translations > show xlate
+show vlan > show switch vlan
+ip route > route outside
+Ctrl+C > Q
+interface vlan [vlan-number] - Creates a switch virtual interface (SVI)
+nameif [name] - Assigns a name to the SVI interface
+security-level [value] - Assigns a security level to the SVI interface
+no forward int vlan [vlan-number] - Disable forwarding to a vlan
+ip address dhcp – Interface configuration mode command that requests an IP address from the upstream device
+ip address dhcp setroute - Same command but it also requests and installs a default route to the upstream device
+If the interface is connecting to an upstream DSL device providing point-to-point over Ethernet services, then it can discover its IP address by using the following:
+ip address pppoe - Interface configuration mode command that requests an IP address from the upstream device.
+ip address pppoe setroute - Same command but it also requests and installs a default route to the upstream device
+switchport access vlan vlan-id - Changes the VLAN assignment of the port from the default of VLAN 1.
+no shutdown - Enables the Layer 2 port.
+route interface-name 0.0.0.0 0.0.0.0 next-hop-ip-address - default route
+passwd password - Configures the Telnet/SSH password.
+telnet <ip-address> <subnet-mask> <interface-name> - Identifies which inside host can telnet to the ASA.
+telnet timeout minutes - Alters the default exec timeout of 5 minutes
+username name password password - Creates a local database entry.
+aaa authentication ssh console LOCAL - Configures SSH to refer to the local database for authentication. The LOCAL keyword is case sensitive and is a predefined server tag.
+crypto key generate rsa modulus 1024 - Generates the RSA key required for SSH encryption.
+ssh ip-address subnet-mask interface-name - Identifies which inside host can SSH to the ASA.
+ssh timeout minutes - Alters the default exec timeout of five minutes.
+NTP
+ntp server ip-address - Identifies the NTP server address.
+ntp authentication-key number md5 key - Configures the authentication key and password.
+ntp trusted-key value - Identifies which configured key is to be trusted.
+ntp authenticate - Enables NTP authentication.
+DHCP
+dhcpd enable inside - Enables the DHCP server service (daemon) on the inside interface of the ASA.
+dhcpd address [ start-of-pool ] - [ end-of-pool ] inside - Defines the pool of IP addresses and assigns the pool to inside users. Notice that the start-of-pool and end-of-pool IP addresses are separated by a hyphen
+dhcpd domain domain-name - Configures the DNS domain name.
+dhcpd dns dns-ip-address - Configures the DNS server IP address.
+dhcpd wins wins-ip-address - Command to configure the WINS server address.
+dhcpd lease seconds - Configures the lease time in seconds. The default is 3600 seconds (1 hour).
+dhcpd option value - Configures the DHCP option code. Option code is in the range 0 – 250.
+If the ASA outside interface was configured as a DHCP client, then the dhcpd auto_config outside global configuration mode command can be used to pass DNS, WINS, and domain information obtained from the DHCP client on the outside interface to the DHCP clients on the inside interface.
+http server enable - Enables the ASA HTTP server. Note that this command uses port 443 by default for HTTP connections.
+http ip-address subnet-mask interface-name - Specifies a host (or hosts) that can access the ASA HTTP server using ASDM.
+Configuring Network Objects:
+object network object-name
+        host ip-addr - Assigns an IP address to the named object.
+subnet net-address net-mask - Assigns a network subnet to the named object.
+range ip-addr-1 ip-addr-n - Assigns IP addresses in a range.
+To erase all network objects, use the clear config object network command.
+Configuring Service Objects:
+object service object-name
+service protocol [ source [ operator port ]] [ destination [ operator port ]] - Specifies an IP protocol name or number.
+service tcp [ source [ operator port ]] [ destination [ operator port ]] - Specifies that the service object is for the TCP protocol.
+service udp [ source [ operator port ]] [ destination [ operator port ]] - Specifies that the service object is for the UDP protocol.
+service icmp icmp-type - Specifies that the service object is for the ICMP protocol.
+service icmp6 icmp6-type - Specifies that the service object is for the ICMPv6 protocol.
+To erase all service objects, use the clear config object service command.
+Configuring Object Groups:
+object-group network grp-name - Configure network object group
+        network-object - Adds network-object
+        group-object - Adds group of network-objects
+object-group protocol grp-name - Configure protocol object group
+        protocol-object - Adds protocol-object(netacad says network object but i think this is a typo)
+        group-object - Adds group of protocol-objects
+object-group icmp-type grp-name - Configure icmp object group
+        icmp-object - Adds icmp-object 
+        group-object - Adds group of icmp-objects
+object-group service grp-name - Configure service object group
+        service-object - Adds service-object
+        group-object - Adds group of service-objects
+object-group service grp-name [tcp | udp | tcp-udp] - Configure service object group for tcp, udp, or both
+        port-object - Specifies ports, like “port-object eq smtp” or “port-object range 2000 2010”
+        group-object - Adds group of port-objects
+To remove all the object groups from the configuration, use the clear configure object-group global configuration mode command.
+ACLs for ASA
+Differences between ASA and IOS: 
+ASA acls use network mask(255.255.255.0) instead of wildcard mask(0.0.0.255)
+ACLs are named instead of numbered
+By default, interface security levels apply access control without an ACL configured
+To allow connectivity between interfaces with the same security levels, use the same-security-traffic permit inter-interface global configuration mode command
+To enable traffic to enter and exit the same interface, such as when encrypted traffic enters an interface and is then routed out the same interface unencrypted, use the same-security-traffic permit intra-interface global configuration mode command.
+Types of ACLs
+Extended - Specifies source and destination, protocol and ports
+Standard - Specifies only destination(different from IOS!)
+Ethertype - Only configured if security appliance is running in transparent mode
+Webtype - Used in a configuration that supports filtering for clientless SSL VPN.
+access-list id extended { deny | permit } protocol { source-addr source-mask } | any | host src-host interface src-if-name [ operator port [ port ]] { dest-addr dest-mask } | any | host dst-host | interface dst-if-name [ operator port [ port ]] - Configures ACL
+access-group access-list { in | out } interface interface-name [ per-user-override | control-plane ] - Apply ACL
+access-list id [ line line-num ] [ extended ] { deny | permit } object-group protocol-obj-grp-id object-group network-obj-grp-id object-group service-obj-grp-id ] object-group network-obj-grp-id object-group service-obj-grp-id ] [ log level ] [ interval secs ] [[ disable | default ] | [ time-range time-range-ID ]] | [ inactive ] - ACL with object-groups
+NAT for ASA
+Configure NAT with a network object
+nat [ ( real-ifc , mapped-ifc ) ] dynamic { mapped-inline-host-ip [ interface ] | [ mapped-obj ] [ pat-pool mapped-obj [ round-robin ]] [ interface ]} [ dns ]
+Dynamic NAT:
+object network mapped-obj - Names the network object that identifies the pool of public addresses.
+range ip-addr-1 ip-addr-n - Assigns IP addresses in a range.
+object network nat-object-name - Names the NAT object.
+subnet net-address net-mask - Assigns a network subnet to the named object. Alternatively the range command could be used.
+nat ( real-ifc , mapped-ifc ) dynamic mapped-obj - Maps a static address to a mapped-inline-host-ip address.
+Dynamic PAT:
+object network nat-object-name - Names the PAT object.
+subnet net-address net-mask - Assigns a network subnet to the named object. Alternatively the range command could also be used.
+nat ( real-ifc , mapped-ifc ) dynamic interface - Provides inside hosts on the real-ifc to overload the outside address of the mapped-ifc interface.
+Static NAT:
+object network nat-object-name - Names the static NAT object.
+host ip-addr -Identifies the host inside IP address.
+nat ( real-ifc , mapped-ifc ) static mapped-inline-host-ip - Statically maps an inside address to an outside address.
+        You could also use any instead of mapped-ifc to translate an object between multiple interfaces with just one cli command
+AAA for ASA
+username name password password [privilege priv-level] - Create local user accounts
+Configure tacacs+ or radius server:
+aaa-server server-tag protocol protocol - Creates a TACACS+ or RADIUS AAA server group.
+aaa-server server-tag [( interface-name )] host { server-ip | name } [ key ] - Configures an AAA server as part of a AAA server group. Also configures AAA server parameters that are host-specific.
+aaa authentication { serial | enable | telnet | ssh | http } console { LOCAL | server-group [ LOCAL ]}
+MPF
+Configuring Class Maps:
+class-map class-map-name - Creates a class map and enters class map config mode
+        description description - Add description text.
+        match any - Class map matches all traffic.
+match access-list access-list-name - Class map matches traffic specified by an extended access list.
+class-map type management class-map-name - Same as above “class-map” but used for management traffic destined to the ASA
+class-map inspection_default - Default global policy
+match default-inspection-traffic - Match default port for all inspections
+Configuring Policy Maps:
+policy-map policy-map-name
+        description description - Add description text.
+class class-map-name - Identify a specific class map on which to perform actions.
+policy-map global_policy - default
+class inspection_default
+inspect icmp
+Configure Service Policy:
+service-policy policy-map-name [ global | interface intf ] - Activate a policy map globally on all interfaces or on a targeted interface
