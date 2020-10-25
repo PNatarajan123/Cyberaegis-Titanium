@@ -22,6 +22,11 @@ if [ $systemupdate == "y" ]
 		apt-get dist-upgrade -y
 		apt-get install bash -y
 fi
+
+read -p "OK, now the program will run an lschattr to list all the immutible files on the computer. Make sure to take notes"
+lsattr -R / 2>/dev/null | grep -- "-i-"
+read -p "open another root terminal and deal with the badboi files (like deleting them or changing permissions)"
+
 #the thing that carries this script rn
 apt-get -y install meld
 apt-get install libpam-cracklib aide synaptic apparmor clamav auditd audispd-plugins rkhunter ufw libchicken-dev iptables-persistent chkrootkit meld curl silversearcher-ag --force-yes
@@ -30,10 +35,6 @@ meld /etc/passwd /home/$USER/Desktop/meld/passwd.txt
 meld /etc/group /home/$USER/Desktop/meld/groups.txt
 meld /home/$USER/.bashrc /home/$USER/Desktop/meld/bashrc.txt
 meld /etc/skel/.bashrc /home/$USER/Desktop/meld/bashrc.txt
-
-read -p "OK, now the program will run an lschattr to list all the immutible files on the computer. Make sure to take notes"
-lsattr -R / 2>/dev/null | grep -- "-i-"
-read -p "open another root terminal and deal with the badboi files (like deleting them or changing permissions)"
 
 echo "u want to chage users (y or n)"
 read chagemece
