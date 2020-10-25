@@ -137,6 +137,7 @@ then
 	bash -c "echo '10' > /etc/pure-ftpd/conf/MaxClientsNumber"
 	bash -c "echo '5' > /etc/pure-ftpd/conf/MaxClientsPerIP"
 	bash -c "echo 'ftp' > /etc/pure-ftpd/conf/SyslogFacility"
+	bash -c "echo '1000' > /etc/pure-ftpd/conf/MinUID"
 	systemctl restart pure-ftpd
 	read -p "Also go to the pure-ftpd presentation and do the certificate generation stuff manually"
 fi
