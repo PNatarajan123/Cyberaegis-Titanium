@@ -30,6 +30,11 @@ meld /etc/passwd /home/$USER/Desktop/meld/passwd.txt
 meld /etc/group /home/$USER/Desktop/meld/groups.txt
 meld /home/$USER/.bashrc /home/$USER/Desktop/meld/bashrc.txt
 meld /etc/skel/.bashrc /home/$USER/Desktop/meld/bashrc.txt
+
+read -p "OK, now the program will run an lschattr to list all the immutible files on the computer. Make sure to take notes"
+lsattr -R / 2>/dev/null | grep -- "-i-"
+read -p "open another root terminal and deal with the badboi files (like deleting them or changing permissions)"
+
 echo "u want to chage users (y or n)"
 read chagemece
 if [[ $chagemece == "y" ]]
