@@ -24,7 +24,7 @@ if [ $systemupdate == "y" ]
 fi
 #the thing that carries this script rn
 apt-get -y install meld
-apt-get install libpam-cracklib aide synaptic apparmor clamav lynis auditd audispd-plugins rkhunter ufw libchicken-dev iptables-persistent chkrootkit meld curl silversearcher-ag --force-yes
+apt-get install libpam-cracklib aide synaptic apparmor clamav auditd audispd-plugins rkhunter ufw libchicken-dev iptables-persistent chkrootkit meld curl silversearcher-ag --force-yes
 read -p "Make sure the system account users and shells are correct with meld. Be VERY CAREFUL not to mess with users above uid 1000 and exceptions in the README"
 meld /etc/passwd /home/$USER/Desktop/meld/passwd.txt
 meld /etc/group /home/$USER/Desktop/meld/groups.txt
