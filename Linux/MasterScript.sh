@@ -118,7 +118,7 @@ then
 fi
 if [[ $vsftpdservice == "n" ]]
 then
-	apt-get -y purge ftp vsftpd
+	apt-get -y purge vsftpd
 fi
 #pure-ftpd
 echo Is pure-ftpd a critical service?
@@ -149,7 +149,7 @@ then
 fi
 if [[ $pureftpdservice == "n" ]]
 then
-	apt-get -y purge ftp pure-ftpd
+	apt-get -y purge pure-ftpd
 fi
 #proftpd
 echo Is proftpd a critical service?
@@ -219,7 +219,7 @@ then
 	chown -R root:root /etc/apache2/*
 	chmod 644 /etc/apache2/apache2.conf
 	chmod 0755 /usr/sbin/apache2
-    meld /etc/apache2/apache2.conf /home/$USER/Desktop/meld/apache2.txt
+  meld /etc/apache2/apache2.conf /home/$USER/Desktop/meld/apache2.txt
 	meld /etc/apache2/mods-available/ssl.conf /home/$USER/Desktop/meld/apachesslconf.txt
 	mv /etc/modsecurity/modsecurity.conf-recommended /etc/modsecurity/modsecurity.conf
 	meld /etc/modsecurity/modsecurity.conf /home/$USER/Desktop/meld/a2modsecurity.txt
