@@ -136,9 +136,10 @@ then
 	bash -c "echo 'yes' > /etc/pure-ftpd/conf/IPV4Only"
 	bash -c "echo 'yes' > /etc/pure-ftpd/conf/ProhibitDotFilesWrite"
 	bash -c "echo 'no' > /etc/pure-ftpd/conf/AnonymousCanCreateDirs"
-	echo "yes" > /etc/pure-ftpd/conf/AnonymousCantUpload
-	echo "no" > /etc/pure-ftpd/conf/AllowUserFXP
-	echo "yes" > /etc/pure-ftpd/conf/PAMAuthentication
+	bash -c "echo 'yes' > /etc/pure-ftpd/conf/AnonymousCantUpload"
+	bash -c "echo 'no' > /etc/pure-ftpd/conf/AllowUserFXP"
+	bash -c "echo 'no' > /etc/pure-ftpd/conf/AllowAnonymousFXP"
+	bash -c "echo 'yes' > /etc/pure-ftpd/conf/PAMAuthentication"
 	bash -c "echo 'no' > /etc/pure-ftpd/conf/AnonymousOnly"
 	bash -c "echo 'no' > /etc/pure-ftpd/conf/DisplayDotFiles"
 	bash -c "echo 'no' > /etc/pure-ftpd/conf/BrokenClientsCompatibility"
@@ -146,6 +147,7 @@ then
 	bash -c "echo '5' > /etc/pure-ftpd/conf/MaxClientsPerIP"
 	bash -c "echo 'ftp' > /etc/pure-ftpd/conf/SyslogFacility"
 	bash -c "echo '1000' > /etc/pure-ftpd/conf/MinUID"
+	bash -c "echo 'no' > /etc/pure-ftpd/conf/AutoRename"
 	systemctl restart pure-ftpd
 	read -p "Also go to the pure-ftpd presentation and do the certificate generation stuff manually"
 fi
