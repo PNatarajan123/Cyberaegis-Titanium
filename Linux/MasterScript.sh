@@ -23,6 +23,11 @@ if [ $systemupdate == "y" ]
 		apt-get install bash -y
 fi
 
+read -p "ok, so these ppl will probably have some IRRELEVANT packages that scores when they are removed. Meld will run and compare the packages in the system to the default packages. Notice anything that is sus"
+dpkg --get-selections | grep -v deinstall | cut -f1 > /home/$USER/Desktop/packages
+chmod 777 /home/$USER/Desktop/packages
+meld /home/$USER/Desktop/packages /home/$USER/Desktop/meld/cleanpackages.txt
+
 read -p "OK, now the program will run an lschattr to list all the immutible files on the computer. Make sure to take notes"
 lsattr -R / 2>/dev/null | grep -- "-i-"
 read -p "open another root terminal and deal with the badboi files (like deleting them or changing permissions)"
@@ -62,10 +67,10 @@ BadPackages="$(grep -e prelink -e talk -e slapd -e darkstat -e httpry -e ophcrac
 apt-get purge $BadPackages --force-yes -y
 apt-get purge crunch lynis xprobe john hashcat binwalk sl john-data medusa hydra dsniff netcat-openbsd netcat-traditional traceroute telnet wireshark aircrack-ng pyrit zeitgeist nmap yersinia deluge httpry p0f dos2unix kismet transmission sendmail tightvncserver finger xinetd cain minetest tor moon-buggy dovecot rsh-server aisleriot hping3 freeciv darkstat nis sqlmap libaa-bin gdb skipfish extremetuxracer ninvaders freesweep nsnake bsdgames
 apt-get install gedit ufw iptables-persistent rsyslog auditd clamav gufw acct clamtk libpam-cracklib psad ntp debsums debsecan libpam-google-authenticator apparmor aide rkhunter vlock selinux-basics
-read -p "ok, so these ppl will probably have some IRRELEVANT packages that scores when they are removed. Meld will run and compare the packages in the system to the default packages. Notice anything that is sus"
-dpkg --get-selections | grep -v deinstall | cut -f1 > /home/$USER/Desktop/packages
-chmod 777 /home/$USER/Desktop/packages
-meld /home/$USER/Desktop/packages /home/$USER/Desktop/meld/cleanpackages.txt
+#read -p "ok, so these ppl will probably have some IRRELEVANT packages that scores when they are removed. Meld will run and compare the packages in the system to the default packages. Notice anything that is sus"
+#dpkg --get-selections | grep -v deinstall | cut -f1 > /home/$USER/Desktop/packages
+#chmod 777 /home/$USER/Desktop/packages
+#meld /home/$USER/Desktop/packages /home/$USER/Desktop/meld/cleanpackages.txt
 systemctl enable rsyslog
 #permissions
 chmod 755 /bin/nano
