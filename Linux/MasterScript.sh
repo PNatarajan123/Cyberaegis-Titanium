@@ -136,9 +136,11 @@ then
 	bash -c "echo 'yes' > /etc/pure-ftpd/conf/IPV4Only"
 	bash -c "echo 'yes' > /etc/pure-ftpd/conf/ProhibitDotFilesWrite"
 	bash -c "echo 'no' > /etc/pure-ftpd/conf/AnonymousCanCreateDirs"
+	echo "yes" > /etc/pure-ftpd/conf/AnonymousCantUpload
+	echo "no" > /etc/pure-ftpd/conf/AllowUserFXP
+	echo "yes" > /etc/pure-ftpd/conf/PAMAuthentication
 	bash -c "echo 'no' > /etc/pure-ftpd/conf/AnonymousOnly"
 	bash -c "echo 'no' > /etc/pure-ftpd/conf/DisplayDotFiles"
-	bash -c "echo 'yes' > /etc/pure-ftpd/conf/IPV4Only"
 	bash -c "echo 'no' > /etc/pure-ftpd/conf/BrokenClientsCompatibility"
 	bash -c "echo '10' > /etc/pure-ftpd/conf/MaxClientsNumber"
 	bash -c "echo '5' > /etc/pure-ftpd/conf/MaxClientsPerIP"
