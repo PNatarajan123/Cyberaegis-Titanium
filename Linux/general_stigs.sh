@@ -3,6 +3,8 @@
        $echo "shut up boomer"
 #	exit 0;
 #else	
+apt-get install sed
+
 cat /etc/lsb-release > /dev/null | grep "Ubuntu" #stig #1
 /usr/lib/update-notifier/apt-check --human-readable > takenote.txt
 gsettings set org.gnome.desktop.lock-enabled tru
