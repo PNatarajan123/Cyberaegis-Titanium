@@ -41,7 +41,7 @@ read -p "open another root terminal and deal with the badboi files (like deletin
 
 #the thing that carries this script rn
 apt-get -y install meld
-apt-get install libpam-cracklib aide synaptic apparmor clamav auditd audispd-plugins rkhunter ufw libchicken-dev iptables-persistent chkrootkit meld curl silversearcher-ag --force-yes
+apt-get install libpam-pwquality aide synaptic apparmor clamav auditd audispd-plugins rkhunter ufw libchicken-dev iptables-persistent chkrootkit meld curl silversearcher-ag --force-yes
 read -p "Make sure the system account users and shells are correct with meld. Be VERY CAREFUL not to mess with users above uid 1000 and exceptions in the README"
 meld /etc/passwd /home/$USER/Desktop/meld/passwd.txt
 meld /etc/group /home/$USER/Desktop/meld/groups.txt
@@ -123,6 +123,7 @@ then
 	chmod 644 /etc/vsftpd.conf
 	chown root:root /etc/vsftpd.conf
 	meld /etc/vsftpd.conf /home/$USER/Desktop/meld/vsftpd.txt
+	chmod 750 /srv/ftp
 fi
 if [[ $vsftpdservice == "n" ]]
 then
@@ -157,6 +158,7 @@ then
 	bash -c "echo '1000' > /etc/pure-ftpd/conf/MinUID"
 	bash -c "echo 'no' > /etc/pure-ftpd/conf/AutoRename"
 	systemctl restart pure-ftpd
+	chmod 750 /srv/ftp
 	read -p "Also go to the pure-ftpd presentation and do the certificate generation stuff manually"
 fi
 if [[ $pureftpdservice == "n" ]]
@@ -173,6 +175,7 @@ then
 	chmod 644 /etc/proftpd/proftpd.conf
 	meld /etc/proftpd/proftpd.conf /home/$USER/Desktop/meld/proftpd.txt
 	systemctl restart proftpd
+	chmod 750 /srv/ftp
 fi
 if [[ $proftpdservice == "n" ]]
 then
@@ -401,7 +404,14 @@ bash -c 'echo "/bin/sh" > /etc/shells'
 bash -c 'echo "/bin/bash" >> /etc/shells'
 bash -c 'echo "/bin/dash" >> /etc/shells'
 bash -c 'echo "/bin/rbash" >> /etc/shells'
-#guest
+#guest (kind of scuffed)
+bash -c 'echo """[Seat:*]
+greeter-session=unity-greeter
+allow-guest=false
+greeter-show-remote-login=false
+greeter-hide-users=true
+greeter-show-manual-login=true
+""" > /etc/lightdm/lightdm.conf'
 bash -c 'echo """[Seat:*]
 greeter-session=unity-greeter
 allow-guest=false
@@ -557,7 +567,7 @@ read -p "If you couldn'r find any, then do you want to mass delete all of them? 
 if [ $MassDelete == "y" ]
 	then
 	    chattr -i -R /
-		find / -type f -iname "*.mp3" -delete -o -iname "*.webm" -delete -o -iname "*.mkv" -delete -o -iname "*.flv" -delete -o -iname "*.vob" -delete -o -iname "*.ogv" -delete -o -iname "*.ogg" -delete -o -iname "*.drc" -delete -o -iname "*.gif" -delete -o -iname "*.gifv" -delete -o -iname "*.mng" -delete -o -iname "*.avi" -delete -o -iname "*.mov" -delete -o -iname "*.qt" -delete -o -iname "*.wmv" -delete -o -iname "*.yuv" -delete -o -iname "*.rm" -delete -o -iname "*.rmvb" -delete -o -iname "*.asf" -delete -o -iname "*.amv" -delete -o -iname "*.mp4" -delete -o -iname "*.m4p" -delete -o -iname "*.m4v" -delete -o -iname "*.mpg" -delete -o -iname "*.mp2" -delete -o -iname "*.mpeg" -delete -o -iname "*.mpe" -delete -o -iname "*.mpv" -delete -o -iname "*.svi" -delete -o -iname "*.3gp" -delete -o -iname "*.3g2" -delete -o -iname "*.mxf" -delete -o -iname "*.roq" -delete -o -iname "*.nsf" -delete -o -iname "*.flv" -delete -o -iname "*.f4v" -delete -o -iname "*.f4p" -delete -o -iname "*.f4a" -delete -o -iname "*.f4b" -delete -o -iname "*.aa" -delete -o -iname "*.aac" -delete -o -iname "*.aax" -delete -o -iname "*.act" -delete -o -iname "*.aiff" -delete -o -iname "*.amr" -delete -o -iname "*.ape" -delete -o -iname "*.au" -delete -o -iname "*.awb" -delete -o -iname "*.dct" -delete -o -iname "*.dss" -delete -o -iname "*.dvf" -delete -o -iname "*.flac" -delete -o -iname "*.gsm" -delete -o -iname "*.iklax," -delete -o -iname "*.ivs" -delete -o -iname "*.m4a" -delete -o -iname "*.m4b" -delete -o -iname "*.mmf" -delete -o -iname "*.mpc" -delete -o -iname "*.msv" -delete -o -iname "*.oga" -delete -o -iname "*.opus" -delete -o -iname "*.ra" -delete -o -iname "*.raw" -delete -o -iname "*.sln" -delete -o -iname "*.tta" -delete -o -iname "*.vox" -delete -o -iname "*.wav" -delete -o -iname "*.wma" -delete -o -iname "*.wv" -delete -o -iname "*.jpeg" -delete -o -iname "*.jpg" -delete -o -iname "*.tif" -delete -o -iname "*.tiff" -delete -o -iname "*.gif" -delete -o -iname "*.bmp" -delete -o -iname "*.png" -delete -o -iname "*.pbm" -delete -o -iname "*.pgm" -delete -o -iname "*.ppm" -delete -o -iname "*.pnm" -delete -o -iname "*.webp" -delete -o -iname "*.hdr" -delete -o -iname "*.bpg" -delete -o -iname "*.ico" -delete -o -iname "*.img" -delete -o -iname "*.aup" -delete -o -iname "*.dmg" -delete -o -iname "*.xlsx" -delete -o -iname "*.rhosts" -delete -o -iname "*.hosts.equiv" -delete
+		find / -type f -iname "*.mp3" -delete -o -iname "*.webm" -delete -o -iname "*.7z" -delete -o -iname "*.mkv" -delete -o -iname "*.flv" -delete -o -iname "*.vob" -delete -o -iname "*.ogv" -delete -o -iname "*.ogg" -delete -o -iname "*.drc" -delete -o -iname "*.gif" -delete -o -iname "*.gifv" -delete -o -iname "*.mng" -delete -o -iname "*.avi" -delete -o -iname "*.mov" -delete -o -iname "*.qt" -delete -o -iname "*.wmv" -delete -o -iname "*.yuv" -delete -o -iname "*.rm" -delete -o -iname "*.rmvb" -delete -o -iname "*.asf" -delete -o -iname "*.amv" -delete -o -iname "*.mp4" -delete -o -iname "*.m4p" -delete -o -iname "*.m4v" -delete -o -iname "*.mpg" -delete -o -iname "*.mp2" -delete -o -iname "*.mpeg" -delete -o -iname "*.mpe" -delete -o -iname "*.mpv" -delete -o -iname "*.svi" -delete -o -iname "*.3gp" -delete -o -iname "*.3g2" -delete -o -iname "*.mxf" -delete -o -iname "*.roq" -delete -o -iname "*.nsf" -delete -o -iname "*.flv" -delete -o -iname "*.f4v" -delete -o -iname "*.f4p" -delete -o -iname "*.f4a" -delete -o -iname "*.f4b" -delete -o -iname "*.aa" -delete -o -iname "*.aac" -delete -o -iname "*.aax" -delete -o -iname "*.act" -delete -o -iname "*.aiff" -delete -o -iname "*.amr" -delete -o -iname "*.ape" -delete -o -iname "*.au" -delete -o -iname "*.awb" -delete -o -iname "*.dct" -delete -o -iname "*.dss" -delete -o -iname "*.dvf" -delete -o -iname "*.flac" -delete -o -iname "*.gsm" -delete -o -iname "*.iklax," -delete -o -iname "*.ivs" -delete -o -iname "*.m4a" -delete -o -iname "*.m4b" -delete -o -iname "*.mmf" -delete -o -iname "*.mpc" -delete -o -iname "*.msv" -delete -o -iname "*.oga" -delete -o -iname "*.opus" -delete -o -iname "*.ra" -delete -o -iname "*.raw" -delete -o -iname "*.sln" -delete -o -iname "*.tta" -delete -o -iname "*.vox" -delete -o -iname "*.wav" -delete -o -iname "*.wma" -delete -o -iname "*.wv" -delete -o -iname "*.jpeg" -delete -o -iname "*.jpg" -delete -o -iname "*.tif" -delete -o -iname "*.tiff" -delete -o -iname "*.gif" -delete -o -iname "*.bmp" -delete -o -iname "*.png" -delete -o -iname "*.pbm" -delete -o -iname "*.pgm" -delete -o -iname "*.ppm" -delete -o -iname "*.pnm" -delete -o -iname "*.webp" -delete -o -iname "*.hdr" -delete -o -iname "*.bpg" -delete -o -iname "*.ico" -delete -o -iname "*.img" -delete -o -iname "*.aup" -delete -o -iname "*.dmg" -delete -o -iname "*.xlsx" -delete -o -iname "*.rhosts" -delete -o -iname "*.hosts.equiv" -delete
 		fi
 
 #Secure /var/tmp
