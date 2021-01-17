@@ -25,14 +25,15 @@ fi
 
 #deletingbadpackages
 dpkg --get-selections | grep -v deinstall | cut -f1 > /home/$USER/Desktop/packages
-BadPackages="$(grep -e prelink -e talk -e slapd -e darkstat -e httpry -e ophcrack -e dos2unix -e snake -e john -e cain -e crunch medusa -e xinetd -e cowsay -e transmission -e rsh-server -e sendmail -e zenmap -e ksh -e nmap -e openswan -e hydra -e kismet -e freeciv -e minetest -e pyrit -e youtube-dl -e dsniff -e telnet -e nginx -e hashcat -e game -e finger -e keylog -e hping -e deluge -e binwalk -e aircrack -e nikto -e p0f -e acunetix -e metasploit -e wireshark -e snort -e backtrack -e inSSIDer -e KisMAC -e NetCop -e superscan -e angry -e truecrypt -e xprobe -e crypt -e nfs -e stunnel -e KeePass -e RainbowCrack -e Wfuzz -e Brutus -e L0phtCrack -e fgdump -e abel -e hping -e scapy -e netcat -e yersinia -e nemesis -e socat -e splunk -e nagios -e Ngrep -e ettercap -e EtherApe -e Tcpdump -e sqlmap -e sqlninja -e NetSparker -e BeEF -e Dradis -e Nessus -e OpenVAS -e Nipper -e Secunia -e Retina -e QualysGuard -e Nexpose /home/$USER/Desktop/packages)"
-apt-get purge $BadPackages --force-yes -y
-apt-get purge knocker crunch lynis xprobe john hashcat binwalk sl john-data medusa hydra dsniff netcat-openbsd netcat-traditional traceroute telnet wireshark aircrack-ng pyrit zeitgeist nmap yersinia deluge httpry p0f dos2unix kismet transmission sendmail tightvncserver finger xinetd cain minetest tor moon-buggy dovecot rsh-server aisleriot hping3 freeciv darkstat nis sqlmap libaa-bin gdb skipfish extremetuxracer ninvaders freesweep nsnake bsdgames
+#BadPackages="$(grep -e prelink -e talk -e slapd -e darkstat -e httpry -e ophcrack -e dos2unix -e snake -e john -e cain -e crunch medusa -e xinetd -e cowsay -e transmission -e rsh-server -e sendmail -e zenmap -e ksh -e nmap -e openswan -e hydra -e kismet -e freeciv -e minetest -e pyrit -e youtube-dl -e dsniff -e telnet -e nginx -e hashcat -e game -e finger -e keylog -e hping -e deluge -e binwalk -e aircrack -e nikto -e p0f -e acunetix -e metasploit -e wireshark -e snort -e backtrack -e inSSIDer -e KisMAC -e NetCop -e superscan -e angry -e truecrypt -e xprobe -e crypt -e nfs -e stunnel -e KeePass -e RainbowCrack -e Wfuzz -e Brutus -e L0phtCrack -e fgdump -e abel -e hping -e scapy -e netcat -e yersinia -e nemesis -e socat -e splunk -e nagios -e Ngrep -e ettercap -e EtherApe -e Tcpdump -e sqlmap -e sqlninja -e NetSparker -e BeEF -e Dradis -e Nessus -e OpenVAS -e Nipper -e Secunia -e Retina -e QualysGuard -e Nexpose /home/$USER/Desktop/packages)"
+#apt-get purge $BadPackages --force-yes -y
+apt-get purge tmux snap pinta knocker crunch lynis xprobe john hashcat binwalk sl john-data medusa hydra dsniff netcat-openbsd netcat-traditional traceroute telnet wireshark aircrack-ng pyrit zeitgeist nmap yersinia deluge httpry p0f dos2unix kismet transmission sendmail tightvncserver finger xinetd cain minetest tor moon-buggy dovecot rsh-server aisleriot hping3 freeciv darkstat nis sqlmap libaa-bin gdb skipfish extremetuxracer ninvaders freesweep nsnake bsdgames
 
 
 read -p "ok, so these ppl will probably have some IRRELEVANT packages that scores when they are removed. Meld will run and compare the packages in the system to the default packages. Notice anything that is sus"
 dpkg --get-selections | grep -v deinstall | cut -f1 > /home/$USER/Desktop/packages
 chmod 777 /home/$USER/Desktop/packages
+apt-get -y install meld
 meld /home/$USER/Desktop/packages /home/$USER/Desktop/meld/cleanpackages.txt
 
 read -p "OK, now the program will run an lschattr to list all the immutible files on the computer. Make sure to take notes"
@@ -40,8 +41,7 @@ lsattr -R / 2>/dev/null | grep -- "-i-"
 read -p "open another root terminal and deal with the badboi files (like deleting them or changing permissions)"
 
 #the thing that carries this script rn
-apt-get -y install meld
-apt-get install libpam-pwquality aide synaptic apparmor clamav auditd audispd-plugins rkhunter ufw libchicken-dev iptables-persistent chkrootkit meld curl silversearcher-ag --force-yes
+apt-get install libpam-cracklib aide synaptic apparmor clamav auditd audispd-plugins rkhunter ufw libchicken-dev iptables-persistent chkrootkit meld curl silversearcher-ag --force-yes
 read -p "Make sure the system account users and shells are correct with meld. Be VERY CAREFUL not to mess with users above uid 1000 and exceptions in the README"
 meld /etc/passwd /home/$USER/Desktop/meld/passwd.txt
 meld /etc/group /home/$USER/Desktop/meld/groups.txt
@@ -197,6 +197,14 @@ if [[ $sambaservice == "n" ]]
 then
 	apt-get -y purge samba smbclient
 fi
+
+echo Is snmp a critical service?
+read snmpservice
+if [[ $snmpservice == "y" ]]
+then
+  apt-get purge snmp
+fi
+
 #ssh
 echo Is ssh a critical service?
 read sshservice
