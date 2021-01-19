@@ -253,7 +253,8 @@ then
 fi
 if [[ $apache2service == "n" ]]
 then
-	apt-get -y purge apache2 apache2-bin
+	apt-get -y purge apache2
+	apt-get -y purge apache2-bin
 fi
 #nginx
 echo Is nginx a critical service?
@@ -334,7 +335,6 @@ meld /etc/sysctl.conf /home/$USER/Desktop/meld/sysctl.txt
 sysctl -p /etc/sysctl.conf
 #auditing
 meld /etc/audit/audit.rules /home/$USER/Desktop/meld/auditrules.txt
-meld /etc/auditd/audit.rules /home/$USER/Desktop/meld/auditrules.txt
 meld /etc/audit/auditd.conf /home/$USER/Desktop/meld/auditconf.txt
 bash -c "sed -i '/active/d' /etc/audisp/plugins.d/syslog.conf && echo 'active = yes' >> /etc/audisp/plugins.d/syslog.conf"
 bash -c "sed -i '/active/d' /etc/audisp/plugins.d/af_unix.conf && echo 'active = yes' >> /etc/audisp/plugins.d/af_unix.conf"

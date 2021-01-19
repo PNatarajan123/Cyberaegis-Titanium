@@ -25,7 +25,8 @@ enabled = true
 #
 # See jail.conf(5) man page for more information
 
-
+[ssh-ddos]
+enabled = true
 
 # Comments: use '#' for comment lines and ';' (following a space) for inline comments
 
