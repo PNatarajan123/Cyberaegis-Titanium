@@ -41,7 +41,7 @@ lsattr -R / 2>/dev/null | grep -- "-i-"
 read -p "open another root terminal and deal with the badboi files (like deleting them or changing permissions)"
 
 #the thing that carries this script rn
-apt-get install libpam-cracklib aide synaptic apparmor clamav auditd audispd-plugins rkhunter ufw libchicken-dev iptables-persistent chkrootkit meld curl silversearcher-ag --force-yes
+apt-get install gedit ufw iptables-persistent rsyslog auditd clamav gufw acct clamtk libpam-cracklib psad ntp debsums debsecan libpam-google-authenticator apparmor aide rkhunter vlock selinux-basics libpam-cracklib aide synaptic apparmor clamav auditd audispd-plugins rkhunter ufw libchicken-dev iptables-persistent chkrootkit meld curl silversearcher-ag --force-yes
 read -p "Make sure the system account users and shells are correct with meld. Be VERY CAREFUL not to mess with users above uid 1000 and exceptions in the README"
 meld /etc/passwd /home/$USER/Desktop/meld/passwd.txt
 meld /etc/group /home/$USER/Desktop/meld/groups.txt
@@ -70,11 +70,10 @@ read -p "While you're at it, you might as well make sure the users and groups ar
 gedit /etc/passwd
 gedit /etc/group
 #packages
-apt-get install gedit ufw iptables-persistent rsyslog auditd clamav gufw acct clamtk libpam-cracklib psad ntp debsums debsecan libpam-google-authenticator apparmor aide rkhunter vlock selinux-basics
 read -p "ok, so these ppl will probably have some IRRELEVANT packages that scores when they are removed. Meld will run and compare the packages in the system to the default packages. Notice anything that is sus"
 dpkg --get-selections | grep -v deinstall | cut -f1 > /home/$USER/Desktop/packages
 chmod 777 /home/$USER/Desktop/packages
-meld /home/$USER/Desktop/packages /home/$USER/Desktop/meld/cleanpackages.txt\
+meld /home/$USER/Desktop/packages /home/$USER/Desktop/meld/cleanpackages.txt
 meld /home/$USER/Desktop/unattendedupgrades.txt /etc/apt/apt.conf.d/50unattended-upgrades
 systemctl enable rsyslog
 #permissions
