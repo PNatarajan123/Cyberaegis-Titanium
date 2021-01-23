@@ -71,10 +71,11 @@ gedit /etc/passwd
 gedit /etc/group
 #packages
 apt-get install gedit ufw iptables-persistent rsyslog auditd clamav gufw acct clamtk libpam-cracklib psad ntp debsums debsecan libpam-google-authenticator apparmor aide rkhunter vlock selinux-basics
-#read -p "ok, so these ppl will probably have some IRRELEVANT packages that scores when they are removed. Meld will run and compare the packages in the system to the default packages. Notice anything that is sus"
-#dpkg --get-selections | grep -v deinstall | cut -f1 > /home/$USER/Desktop/packages
-#chmod 777 /home/$USER/Desktop/packages
-#meld /home/$USER/Desktop/packages /home/$USER/Desktop/meld/cleanpackages.txt
+read -p "ok, so these ppl will probably have some IRRELEVANT packages that scores when they are removed. Meld will run and compare the packages in the system to the default packages. Notice anything that is sus"
+dpkg --get-selections | grep -v deinstall | cut -f1 > /home/$USER/Desktop/packages
+chmod 777 /home/$USER/Desktop/packages
+meld /home/$USER/Desktop/packages /home/$USER/Desktop/meld/cleanpackages.txt\
+meld /home/$USER/Desktop/unattendedupgrades.txt /etc/apt/apt.conf.d/50unattended-upgrades
 systemctl enable rsyslog
 #permissions
 chmod 755 /bin/nano
