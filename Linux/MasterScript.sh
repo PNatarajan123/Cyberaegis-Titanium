@@ -351,6 +351,7 @@ bash -c 'echo "manual" > /etc/init/modemmanager.override'
 bash -c 'echo "manual" > /etc/init.d/modemmanager.override'
 bash -c 'sed -i "/InitiallyPowered/d" /etc/bluetooth/main.conf'
 bash -c 'echo "InitiallyPowered = false" >> /etc/bluetooth/main.conf'
+bash -c 'echo "report_crashes=false" >> /etc/default/whoopsie'
 bash -c 'echo "InitiallyPowered=false" >> /etc/bluetooth/main.conf'
 bash -c "sed -i '/enabled/d' /etc/default/apport && echo 'enabled = 0' >> /etc/default/apport"
 bash -c "sed -i '/ENABLED/d' /etc/default/irqbalance && echo 'ENABLED = \"0\"' >> /etc/default/irqbalance"
