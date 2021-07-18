@@ -25,7 +25,7 @@ fi
 
 #deletingbadpackages
 dpkg --get-selections | grep -v deinstall | cut -f1 > /home/$USER/Desktop/packages
-apt-get purge ophcrack tmux snap pinta knocker nbtscan pompem crunch lynis xprobe john hashcat binwalk sl john-data medusa hydra dsniff netcat-openbsd netcat-traditional traceroute telnet wireshark aircrack-ng pyrit zeitgeist nmap yersinia deluge httpry p0f dos2unix kismet transmission sendmail tightvncserver finger xinetd cain minetest tor moon-buggy dovecot rsh-server aisleriot hping3 freeciv darkstat nis sqlmap libaa-bin gdb skipfish extremetuxracer ninvaders freesweep nsnake bsdgames
+apt-get purge spampd ophcrack tmux snap pinta knocker nbtscan pompem crunch lynis xprobe john binwalk sl john-data medusa hydra dsniff netcat-openbsd netcat-traditional traceroute telnet wireshark aircrack-ng pyrit zeitgeist nmap yersinia deluge httpry p0f dos2unix kismet transmission sendmail tightvncserver finger xinetd cain minetest tor moon-buggy dovecot rsh-server aisleriot hping3 freeciv darkstat nis sqlmap libaa-bin gdb skipfish extremetuxracer ninvaders freesweep nsnake bsdgames
 
 
 read -p "ok, so these ppl will probably have some IRRELEVANT packages that scores when they are removed. Meld will run and compare the packages in the system to the default packages. Notice anything that is sus"
