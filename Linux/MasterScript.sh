@@ -1,6 +1,7 @@
 #!/bin/bash
 #copy and paste the postfix configs
 #updates
+#VM tools might not be installed. Install them with: apt-get install open-vm-tools-desktop. Then, restart.
 read -p "what is the user's name?" USER
 echo "CLEANING PACKAGES"
 apt-get update
@@ -25,7 +26,7 @@ fi
 
 #deletingbadpackages
 dpkg --get-selections | grep -v deinstall | cut -f1 > /home/$USER/Desktop/packages
-apt-get purge spampd ophcrack tmux snap pinta knocker nbtscan pompem crunch lynis xprobe john binwalk sl john-data medusa hydra dsniff netcat-openbsd netcat-traditional traceroute telnet wireshark aircrack-ng pyrit zeitgeist nmap yersinia deluge httpry p0f dos2unix kismet transmission sendmail tightvncserver finger xinetd cain minetest tor moon-buggy dovecot rsh-server aisleriot hping3 freeciv darkstat nis sqlmap libaa-bin gdb skipfish extremetuxracer ninvaders freesweep nsnake bsdgames
+apt-get purge arp-scan braa dnswalk faraday-server donna spampd ophcrack tmux snap pinta knocker nbtscan pompem crunch lynis xprobe john binwalk sl john-data medusa hydra dsniff netcat-openbsd netcat-traditional traceroute telnet wireshark aircrack-ng pyrit zeitgeist nmap yersinia deluge httpry p0f dos2unix kismet transmission sendmail tightvncserver finger xinetd cain minetest tor moon-buggy dovecot rsh-server aisleriot hping3 freeciv darkstat nis sqlmap libaa-bin gdb skipfish extremetuxracer ninvaders freesweep nsnake bsdgames
 
 
 read -p "ok, so these ppl will probably have some IRRELEVANT packages that scores when they are removed. Meld will run and compare the packages in the system to the default packages. Notice anything that is sus"
@@ -46,6 +47,7 @@ meld /etc/group /home/$USER/Desktop/meld/groups.txt
 meld /home/$USER/.bashrc /home/$USER/Desktop/meld/bashrc.txt
 meld /etc/skel/.bashrc /home/$USER/Desktop/meld/bashrc.txt
 meld /etc/sudoers.d/README /home/$USER/Desktop/meld/sudoreadme.txt
+rm -rf /etc/apt/sources.list.d/*
 
 echo "u want to chage users (y or n)"
 read chagemece
@@ -98,6 +100,7 @@ chmod 0000 /etc/shadow /etc/gshadow
 chmod 600 /etc/sysctl.conf
 chmod 755 /etc
 chmod 4700 /bin/su
+chmod 755 /bin/bash
 chmod 755 /sbin/ifconfig
 chmod 666 /dev/null /dev/tty /dev/console
 chmod 600 /boot/grub/grub.cfg
@@ -587,6 +590,7 @@ cp -prf /var/tmpold/ /tmp/
 bash -c "sed -i '/tty/d' /etc/securetty && echo 'tty1' >> /etc/securetty"
 
 read -p "these mofos probably hid a nonattributable file. So, type in the command, 'lsattr -R | grep +i' in the / directory to find them"
+read -p "Now, these people probably hid a malicious script. Search for .bash | .sh | .zsh | .py extensions. Afterwards, use silversearcher with the command ./'script name' to find the program that runs the script"
 
 #end with locking out root
 passwd -l root
