@@ -1,0 +1,10 @@
+<BackupInst xmlns="http://www.microsoft.com/GroupPolicy/GPOOperations/Manifest">
+  <GPOGuid><![CDATA[{96BB1CBE-E589-4397-B3B8-738257D66897}]]></GPOGuid>
+  <GPODomain><![CDATA[contoso.com]]></GPODomain>
+  <GPODomainGuid><![CDATA[{970dc492-9663-4ce1-ba13-2ce7e1ef72d7}]]></GPODomainGuid>
+  <GPODomainController><![CDATA[SASC-WS08-DC01.sasc.contoso.com]]></GPODomainController>
+  <BackupTime>2020-01-10T20:37:22</BackupTime>
+  <ID>{fa0b60a3-8678-4de4-9ccc-9d23e26dc7a1}</ID>
+  <Comment>The Computer baseline includes settings to configure desktop and mobile computers running Windows 10 version 1607.</Comment>
+  <GPODisplayName>Windows 10 Group Policy</GPODisplayName>
+</BackupInst>
