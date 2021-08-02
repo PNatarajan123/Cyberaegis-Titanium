@@ -99,4 +99,4 @@ ClientAliveCountMax 0
 FingerprintHash sha512
 MaxStartups 2:30:10
 Ciphers aes128-ctr,aes192-ctr,aes256-ctr,aes128-cbc,3des-cbc,aes192-cbc,aes256-cbc
-MaxAuthTries 3
+MaxAuthTries 2
