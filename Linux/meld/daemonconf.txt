@@ -14,6 +14,7 @@
   KillInitClients=true
   #LogDir=var/gdm
   PidFile=var/run/gdm.pid
+  PidFile=var/run/gdm.pid
   PostSessionScriptDir=etc/gdm3/PostSession
   PreSessionScriptDir=etc/gdm3/PreSession
   RootPath=/sbin:/usr/sbin:/bin:/usr/bin:/usr/bin/X11:/usr/local/bin

@@ -2,6 +2,7 @@
 #copy and paste the postfix configs
 #updates
 #VM tools might not be installed. Install them with: apt-get install open-vm-tools-desktop. Then, restart.
+read -p "remember to do dconfeditor"
 read -p "what is the user's name?" USER
 echo "CLEANING PACKAGES"
 apt-get update
@@ -25,8 +26,10 @@ if [ $systemupdate == "y" ]
 fi
 
 #deletingbadpackages
-dpkg --get-selections | grep -v deinstall | cut -f1 > /home/$USER/Desktop/packages
-apt-get purge arp-scan dnswalk spampd ophcrack tmux snap pinta knocker nbtscan pompem crunch lynis xprobe john binwalk sl john-data medusa hydra dsniff netcat-openbsd netcat-traditional traceroute telnet wireshark aircrack-ng pyrit zeitgeist nmap yersinia deluge httpry p0f dos2unix kismet transmission sendmail tightvncserver finger xinetd cain minetest tor moon-buggy dovecot rsh-server aisleriot hping3 freeciv darkstat nis sqlmap libaa-bin gdb skipfish extremetuxracer ninvaders freesweep nsnake bsdgames
+for i in arp-scan braa hashcat dnswalk faraday-server donna spampd ophcrack tmux snap pinta knocker nbtscan pompem crunch lynis xprobe john binwalk sl john-data medusa hydra dsniff netcat-openbsd netcat-traditional traceroute telnet wireshark aircrack-ng pyrit zeitgeist nmap yersinia deluge httpry p0f dos2unix kismet transmission sendmail tightvncserver finger xinetd cain minetest tor moon-buggy dovecot rsh-server aisleriot hping3 freeciv darkstat nis sqlmap libaa-bin gdb skipfish extremetuxracer ninvaders freesweep nsnake bsdgames
+do
+    apt purge $i -y
+done
 
 apt-get -y install meld
 
