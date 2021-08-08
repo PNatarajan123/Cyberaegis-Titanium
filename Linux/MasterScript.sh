@@ -50,6 +50,7 @@ meld /etc/group /home/$USER/Desktop/meld/groups.txt
 meld /home/$USER/.bashrc /home/$USER/Desktop/meld/bashrc.txt
 meld /etc/skel/.bashrc /home/$USER/Desktop/meld/bashrc.txt
 meld /etc/sudoers.d/README /home/$USER/Desktop/meld/sudoreadme.txt
+meld /etc/apt/sources.list /home/$USER/Desktop/meld/ubuntu16sourceslist.txt
 rm -rf /etc/apt/sources.list.d/*
 
 echo "u want to chage users (y or n)"
