@@ -26,7 +26,7 @@ if [ $systemupdate == "y" ]
 fi
 
 #deletingbadpackages
-for i in arp-scan braa dirb hashcat dnswalk faraday-server donna spampd ophcrack tmux snap pinta knocker nbtscan pompem crunch netcat lynis xprobe john binwalk sl john-data medusa hydra dsniff netcat-openbsd netcat-traditional traceroute telnet wireshark aircrack-ng pyrit zeitgeist nmap yersinia deluge httpry p0f dos2unix kismet transmission sendmail tightvncserver finger xinetd cain minetest tor moon-buggy dovecot rsh-server aisleriot hping3 freeciv darkstat nis sqlmap libaa-bin gdb skipfish extremetuxracer ninvaders freesweep nsnake bsdgames
+for i in arp-scan braa dirb hashcat dnswalk faraday-server donna spampd ophcrack tmux snap pinta knocker nbtscan pompem crunch netcat lynis xprobe john zenmap binwalk sl john-data medusa hydra dsniff netcat-openbsd netcat-traditional traceroute telnet wireshark aircrack-ng pyrit zeitgeist nmap yersinia deluge httpry p0f dos2unix kismet transmission sendmail tightvncserver finger xinetd cain minetest tor moon-buggy dovecot rsh-server aisleriot hping3 freeciv darkstat nis sqlmap libaa-bin gdb skipfish extremetuxracer ninvaders freesweep nsnake bsdgames
 do
     apt purge $i -y
 done
@@ -51,6 +51,8 @@ meld /home/$USER/.bashrc /home/$USER/Desktop/meld/bashrc.txt
 meld /etc/skel/.bashrc /home/$USER/Desktop/meld/bashrc.txt
 meld /etc/sudoers.d/README /home/$USER/Desktop/meld/sudoreadme.txt
 meld /etc/apt/sources.list /home/$USER/Desktop/meld/ubuntu16sourceslist.txt
+meld /etc/apt/apt.conf.d/50unattended-upgrades /home/$USER/Desktop/meld/unattendedupgrades.txt
+meld /etc/gdm3/greeter.dconf-defaults /home/$USER/Desktop/meld/moregdm.txt
 rm -rf /etc/apt/sources.list.d/*
 
 echo "u want to chage users (y or n)"
@@ -74,11 +76,6 @@ read -p "While you're at it, you might as well make sure the users and groups ar
 gedit /etc/passwd
 gedit /etc/group
 #packages
-read -p "ok, so these ppl will probably have some IRRELEVANT packages that scores when they are removed. Meld will run and compare the packages in the system to the default packages. Notice anything that is sus"
-dpkg --get-selections | grep -v deinstall | cut -f1 > /home/$USER/Desktop/packages
-chmod 777 /home/$USER/Desktop/packages
-meld /home/$USER/Desktop/packages /home/$USER/Desktop/meld/cleanpackages.txt
-meld /home/$USER/Desktop/unattendedupgrades.txt /etc/apt/apt.conf.d/50unattended-upgrades
 systemctl enable rsyslog
 #permissions
 chmod 755 /bin/nano
@@ -198,14 +195,22 @@ then
 	read -p "Ok, when melding the file make sure not to mess with the shares. Do that manually. Set the secure settings to the ones on the meld file as printers and stuff like that"
 	meld /etc/samba/smb.conf /home/$USER/Desktop/meld/smbconf.txt
 fi
+
 if [[ $sambaservice == "n" ]]
 then
 	apt-get -y purge samba smbclient
 fi
 
+echo Is smdb a critical service?
+read smdb
+if [[ smdb == "n" ]]
+then
+	apt-get purge smdb
+fi
+
 echo Is snmp a critical service?
 read snmpservice
-if [[ $snmpservice == "y" ]]
+if [[ $snmpservice == "n" ]]
 then
   apt-get purge snmp
 fi
