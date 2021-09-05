@@ -604,3 +604,4 @@ read -p "Now, these people probably hid a malicious script. Search for .bash | .
 #end with locking out root
 passwd -l root
 usermod -g 0 root
+read -p "if it is debian or gdm, run debian script"
