@@ -53,6 +53,7 @@ meld /etc/sudoers.d/README /home/$USER/Desktop/meld/sudoreadme.txt
 meld /etc/apt/sources.list /home/$USER/Desktop/meld/ubuntu16sourceslist.txt
 meld /etc/apt/apt.conf.d/50unattended-upgrades /home/$USER/Desktop/meld/unattendedupgrades.txt
 meld /etc/gdm3/greeter.dconf-defaults /home/$USER/Desktop/meld/moregdm.txt
+meld /etc/gdm3/custom.conf /home/$USER/Desktop/meld/daemonconf.txt
 rm -rf /etc/apt/sources.list.d/*
 
 echo "u want to chage users (y or n)"
@@ -110,6 +111,7 @@ chmod og-rwx /boot/grub/grub.cfg
 chmod 0700 /etc/cron.daily/* /etc/cron.hourly/* /etc/cron.monthly/* /etc/cron.weekly/* 
 #prediction 100
 rm -rf /etc/password
+rm -rf /usr/share/wordpress/info.php
 #firewall
 meld /etc/ufw/before.rules /home/$USER/Desktop/meld/ufwbeforerules.txt
 ufw enable
@@ -130,7 +132,7 @@ then
 fi
 if [[ $vsftpdservice == "n" ]]
 then
-	apt-get -y purge vsftpd
+	apt-get purge vsftpd -y
 fi
 #pure-ftpd
 echo Is pure-ftpd a critical service?
@@ -599,7 +601,8 @@ cp -prf /var/tmpold/ /tmp/
 bash -c "sed -i '/tty/d' /etc/securetty && echo 'tty1' >> /etc/securetty"
 
 read -p "these mofos probably hid a nonattributable file. So, type in the command, 'lsattr -R | grep +i' in the / directory to find them"
-read -p "Now, these people probably hid a malicious script. Search for .bash | .sh | .zsh | .py extensions. Afterwards, use silversearcher with the command ./'script name' to find the program that runs the script"
+read -p "Now, these people probably hid a malicious script. Search for .bash | .sh | .zsh | .py | .php extensions. Afterwards, use silversearcher with the command ./'script name' to find the program that runs the script"
+read -p "these mofos probably have some CreditCard stuff. Use ag with the parameter: CreditCard to search. If this does not work, use specific credit card companies (ex: American Express)"
 
 #end with locking out root
 passwd -l root
