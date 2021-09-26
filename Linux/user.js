@@ -182,6 +182,8 @@ user_pref("gfx.downloadable_fonts.enabled", false);
 user_pref("gfx.downloadable_fonts.fallback_delay", -1);
 user_pref("gfx.font_rendering.opentype_svg.enabled", false);
 user_pref("gfx.font_rendering.graphite.enabled", false);
+user_pref("privacy.trackingprotection.enabled", true);
+user_pref("privacy.trackingprotection.socialtracking.enabled", true);
 user_pref("font.system.whitelist", "");
 user_pref("network.http.sendRefererHeader", 2); 
 user_pref("network.http.referer.trimmingPolicy", 0);

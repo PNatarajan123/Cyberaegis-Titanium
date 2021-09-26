@@ -2,7 +2,8 @@
 #copy and paste the postfix configs
 #updates
 #VM tools might not be installed. Install them with: apt-get install open-vm-tools-desktop. Then, restart.
-read -p "remember to do dconfeditor"
+read -p "remember to do dconfeditor (https://docs.google.com/presentation/d/1MzrLEpePp8ZX1ROYRJjRxGJpRzI4F11Kq41Mv2ThqUY/edit?usp=sharing)"
+read -p "do wordpress if it is a crit service (removing packages, etc)"
 read -p "what is the user's name?" USER
 echo "CLEANING PACKAGES"
 apt-get update
@@ -55,6 +56,13 @@ meld /etc/apt/apt.conf.d/50unattended-upgrades /home/$USER/Desktop/meld/unattend
 meld /etc/gdm3/greeter.dconf-defaults /home/$USER/Desktop/meld/moregdm.txt
 meld /etc/gdm3/custom.conf /home/$USER/Desktop/meld/daemonconf.txt
 rm -rf /etc/apt/sources.list.d/*
+find /etc/systemd/system > /home/$USER/Desktop/servicefiles.txt
+find /bin > /home/$USER/Desktop/bianaries.txt
+read -p "meld will run a check on service files. Delete the ones that are sus (/etc/systemd/system)"
+echo "link to presentation: https://docs.google.com/presentation/d/1OjSKF_GN0Hv77Q6nUzHMBpIYszFR6ZiBM7inw8rrio0/edit?usp=sharing"
+meld /home/$USER/Desktop/servicefiles.txt /home/$USER/Desktop/meld/cleanservicefiles.txt
+echo "compare default bianaries"
+meld /home/$USER/Desktop/bianaries.txt /home/$USER/Desktop/meld/defaultbianary.txt
 
 echo "u want to chage users (y or n)"
 read chagemece
@@ -119,6 +127,8 @@ iptables -A FORWARD -p tcp --tcp-flags SYN,ACK,FIN,RST RST -m limit --limit 1/s 
 bash -c "sed -i '/IPV6/d' /etc/default/ufw && echo 'IPV6=no' >> /etc/default/ufw" 
 ###CRITICAL SERVICES###
 #vsftpd
+echo configuring crit services now
+
 echo Is vsftpd a critical service?
 read vsftpdservice
 if [[ $vsftpdservice == "y" ]]
@@ -134,6 +144,7 @@ if [[ $vsftpdservice == "n" ]]
 then
 	apt-get purge vsftpd -y
 fi
+
 #pure-ftpd
 echo Is pure-ftpd a critical service?
 read pureftpdservice
@@ -564,9 +575,10 @@ find /etc/crontab -type f -not -name .htaccess -printf "\n%p\n" -exec cat {} \; 
 find /etc/cron.weekly -type f -not -name .htaccess -printf "\n%p\n" -exec cat {} \; >> /home/$USER/Desktop/cronstuff.txt
 read -p "ok kids, listen up. Compare the cronstuff with clean cron. Doing things here won't do anything. So do it manually once you notice the differences/malicious stuff."
 meld /home/$USER/Desktop/cronstuff.txt /home/$USER/Desktop/meld/cleancron.txt
-ls -la /usr/sbin >> /home/$USER/Desktop/allscriptshere.txt
+ls -la /usr/sbin > /home/$USER/Desktop/allscriptshere.txt
 chmod 777 /home/$USER/Desktop/allscriptshere.txt
-meld /home/$USER/Desktop/defaultscripts.txt /home/$USER/Desktop/meld/allscriptshere.txt
+read -p "this part compares the scripts in /usr/sbin"
+meld /home/$USER/Desktop/allscriptshere.txt /home/$USER/Desktop/meld/defaultscripts.txt
 systemctl enable cron
 systemctl enable anacron
 bash -c "echo '05 4 * * * root /usr/sbin/aide --check' >> /etc/crontab"
