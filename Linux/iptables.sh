@@ -16,4 +16,4 @@ ufw deny 515
 ufw deny 111
 lsof  -i -n -P
 netstat -tulpn
-
+ufw logging high
